@@ -1,0 +1,43 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <meta name="description"
+          content="ResumeAI - AI Powered Resume Analyzer">
+
+    <title>{% block title %}ResumeAI{% endblock %}</title>
+
+    <link rel="stylesheet"
+          href="{% static 'css/bootstrap.min.css' %}">
+
+    <link rel="stylesheet"
+          href="{% static 'vendors/bootstrap-icons/bootstrap-icons.css' %}">
+
+    <link rel="stylesheet"
+          href="{% static 'css/style.css' %}">
+
+    {% block extra_css %}
+    {% endblock %}
+
+</head>
+
+<body>
+
+{% block content %}
+{% endblock %}
+
+<script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+
+{% block extra_js %}
+{% endblock %}
+
+</body>
+
+</html>
