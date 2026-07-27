@@ -1,0 +1,204 @@
+{% extends "base.html" %}
+
+{% block title %}
+ATS Analysis
+{% endblock %}
+
+{% block content %}
+
+<div class="page-heading mb-4">
+
+    <h2 class="fw-bold">
+        <i class="bi bi-clipboard-data"></i>
+        ATS Resume Analysis
+    </h2>
+
+    <p class="text-muted">
+        ResumeAI analyzed your resume and detected the following information.
+    </p>
+
+</div>
+
+<div class="row g-4">
+
+    <!-- Resume Information -->
+
+    <div class="col-lg-3">
+
+        <div class="card shadow-sm h-100">
+
+            <div class="card-header">
+
+                <h5 class="mb-0">
+
+                    Resume Details
+
+                </h5>
+
+            </div>
+
+            <div class="card-body">
+
+                <p>
+
+                    <strong>Title</strong><br>
+
+                    {{ resume.title }}
+
+                </p>
+
+                <hr>
+
+                <p>
+
+                    <strong>Uploaded</strong><br>
+
+                    {{ resume.uploaded_at|date:"d M Y - h:i A" }}
+
+                </p>
+
+                <hr>
+
+                <p>
+
+                    <strong>Words</strong><br>
+
+                    {{ word_count }}
+
+                </p>
+
+                <hr>
+
+                <p>
+
+                    <strong>Characters</strong><br>
+
+                    {{ character_count }}
+
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- ATS Analysis -->
+
+    <div class="col-lg-9">
+
+        <div class="row g-4">
+
+            <!-- Skills Found -->
+
+            <div class="col-lg-6">
+
+                <div class="card shadow-sm h-100">
+
+                    <div class="card-header bg-success text-white">
+
+                        <h5 class="mb-0">
+
+                            <i class="bi bi-check-circle-fill"></i>
+
+                            Skills Found
+
+                        </h5>
+
+                    </div>
+
+                    <div class="card-body">
+
+                        {% if found_skills %}
+
+                            {% for skill in found_skills %}
+
+                                <span class="badge bg-success fs-6 m-1 p-2">
+
+                                    {{ skill }}
+
+                                </span>
+
+                            {% endfor %}
+
+                        {% else %}
+
+                            <p>No skills detected.</p>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- Missing Skills -->
+
+            <div class="col-lg-6">
+
+                <div class="card shadow-sm h-100">
+
+                    <div class="card-header bg-danger text-white">
+
+                        <h5 class="mb-0">
+
+                            <i class="bi bi-x-circle-fill"></i>
+
+                            Missing Skills
+
+                        </h5>
+
+                    </div>
+
+                    <div class="card-body">
+
+                        {% for skill in missing_skills|slice:":15" %}
+
+                            <span class="badge bg-secondary fs-6 m-1 p-2">
+
+                                {{ skill }}
+
+                            </span>
+
+                        {% endfor %}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- Extracted Text -->
+
+            <div class="col-12">
+
+                <div class="card shadow-sm">
+
+                    <div class="card-header">
+
+                        <h5 class="mb-0">
+
+                            Extracted Resume Text
+
+                        </h5>
+
+                    </div>
+
+                    <div class="card-body">
+
+                        <pre style="white-space: pre-wrap;font-family:inherit;">{{ text }}</pre>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

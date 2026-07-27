@@ -9,23 +9,32 @@ My Resumes
 <div class="page-heading mb-4 d-flex justify-content-between align-items-center">
 
     <div>
+
         <h2 class="fw-bold mb-1">
+
             <i class="bi bi-folder2-open"></i>
+
             My Resumes
+
         </h2>
 
         <p class="text-muted mb-0">
+
             Manage all your uploaded resumes.
+
         </p>
+
     </div>
 
     <a href="{% url 'upload_resume' %}" class="btn btn-primary">
+
         <i class="bi bi-cloud-upload"></i>
+
         Upload Resume
+
     </a>
 
 </div>
-
 
 <div class="card shadow-sm border-0">
 
@@ -66,11 +75,15 @@ My Resumes
                                 <div>
 
                                     <h6 class="mb-1 fw-semibold">
+
                                         {{ resume.title }}
+
                                     </h6>
 
                                     <small class="text-muted">
+
                                         {{ resume.file.name }}
+
                                     </small>
 
                                 </div>
@@ -87,23 +100,35 @@ My Resumes
 
                         <td class="text-center">
 
-                            <a
-                                href="{{ resume.file.url }}"
-                                class="btn btn-success btn-sm"
-                                target="_blank">
+                            <div class="d-flex justify-content-center gap-2">
 
-                                <i class="bi bi-download"></i>
+                                <a
+                                    href="{% url 'analyze_resume' resume.id %}"
+                                    class="btn btn-primary btn-sm">
 
-                            </a>
+                                    <i class="bi bi-search"></i>
 
-                            <a
-                                href="{% url 'delete_resume' resume.id %}"
-                                class="btn btn-danger btn-sm"
-                                onclick="return confirm('Are you sure you want to delete this resume?');">
+                                </a>
 
-                                <i class="bi bi-trash"></i>
+                                <a
+                                    href="{{ resume.file.url }}"
+                                    class="btn btn-success btn-sm"
+                                    target="_blank">
 
-                            </a>
+                                    <i class="bi bi-download"></i>
+
+                                </a>
+
+                                <a
+                                    href="{% url 'delete_resume' resume.id %}"
+                                    class="btn btn-danger btn-sm"
+                                    onclick="return confirm('Are you sure you want to delete this resume?');">
+
+                                    <i class="bi bi-trash"></i>
+
+                                </a>
+
+                            </div>
 
                         </td>
 
@@ -124,7 +149,9 @@ My Resumes
             <i class="bi bi-folder-x display-1 text-secondary"></i>
 
             <h3 class="mt-4">
+
                 No resumes uploaded
+
             </h3>
 
             <p class="text-muted">

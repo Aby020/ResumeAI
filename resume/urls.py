@@ -21,4 +21,10 @@ urlpatterns = [
         name="delete_resume"
     ),
 
+    path(
+        "analysis/<int:resume_id>/",
+        views.analyze_resume,
+        name="analyze_resume"
+    ),
+
 ]
