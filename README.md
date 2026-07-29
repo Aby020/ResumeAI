@@ -170,10 +170,6 @@ https://github.com/Aby020
 
 LinkedIn
 
-(Add your LinkedIn profile here)
+(www.linkedin.com/in/abi-thomas-39633a200)
 
 ---
-
-# ⭐ If you like this project
-
-Give this repository a ⭐ on GitHub.
