@@ -99,6 +99,13 @@ def analyze_resume(request, resume_id):
     # -----------------------------
     # Extract Resume Text
     # -----------------------------
+    if not resume.file or not os.path.exists(resume.file.path):
+        messages.error(
+            request,
+            "Resume file not found. It may have been removed after a server restart. Please upload the resume again.",
+        )
+        return redirect("upload_resume")
+
     resume_text = extract_text(
         resume.file.path,
     )
@@ -116,7 +123,6 @@ def analyze_resume(request, resume_id):
     ats = calculate_ats_score(
         resume_text,
     )
-
 
     # -----------------------------
     # Job Match Analysis
@@ -147,7 +153,6 @@ def analyze_resume(request, resume_id):
 
     analysis.save()
 
-   
     # -----------------------------
     # Resume Statistics
     # -----------------------------
