@@ -1,10 +1,5 @@
 import pdfplumber
 
-try:
-    import easyocr
-except ImportError:
-    easyocr = None
-
 
 def extract_pdf_text(pdf_path: str) -> str:
     text = ""
@@ -19,11 +14,12 @@ def extract_pdf_text(pdf_path: str) -> str:
 
 
 def extract_image_text(image_path: str) -> str:
-    if easyocr is None:
+    try:
+        import easyocr
+    except Exception:
         return ""
 
     reader = easyocr.Reader(["en"], gpu=False)
-
     result = reader.readtext(image_path, detail=0)
 
     return "\n".join(result)
