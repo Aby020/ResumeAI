@@ -109,6 +109,12 @@ def analyze_resume(request, resume_id):
     resume_text = extract_text(
         resume.file.url,
     )
+    print("=" * 60)
+    print("Resume URL:", resume.file.url)
+    print("Resume text length:", len(resume_text))
+    print("First 500 characters:")
+    print(resume_text[:500])
+    print("=" * 60)
 
     # -----------------------------
     # Detect Resume Skills
@@ -235,10 +241,10 @@ def delete_resume(request, resume_id):
     # Delete uploaded PDF
     try:
         if resume.file and os.path.isfile(
-            resume.file.path,
+            resume.file.url,
         ):
             os.remove(
-                resume.file.path,
+                resume.file.url,
             )
     except Exception:
         pass
