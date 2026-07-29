@@ -1,38 +1,31 @@
 import io
 
 import pdfplumber
-import requests
 
 
-def extract_pdf_text(pdf_source):
+def extract_pdf_text(file_obj):
     text = ""
 
-    # If Cloudinary URL
-    if pdf_source.startswith("http"):
-        response = requests.get(pdf_source)
-        response.raise_for_status()
+    # Make sure we're at the beginning of the file
+    file_obj.open("rb")
 
-        pdf_file = io.BytesIO(response.content)
+    pdf_bytes = io.BytesIO(file_obj.read())
 
-        with pdfplumber.open(pdf_file) as pdf:
-            for page in pdf.pages:
-                page_text = page.extract_text()
-                if page_text:
-                    text += page_text + "\n"
+    with pdfplumber.open(pdf_bytes) as pdf:
+        for page in pdf.pages:
+            page_text = page.extract_text()
+            if page_text:
+                text += page_text + "\n"
 
-    # Local file (development)
-    else:
-        with pdfplumber.open(pdf_source) as pdf:
-            for page in pdf.pages:
-                page_text = page.extract_text()
-                if page_text:
-                    text += page_text + "\n"
+    file_obj.close()
 
     return text
 
 
-def extract_text(file_source):
-    if file_source.lower().endswith(".pdf"):
-        return extract_pdf_text(file_source)
+def extract_text(file_obj):
+    filename = file_obj.name.lower()
+
+    if filename.endswith(".pdf"):
+        return extract_pdf_text(file_obj)
 
     return ""

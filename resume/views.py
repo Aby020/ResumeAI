@@ -107,14 +107,10 @@ def analyze_resume(request, resume_id):
         return redirect("upload_resume")
 
     resume_text = extract_text(
-        resume.file.url,
+        resume.file,
     )
-    print("=" * 60)
-    print("Resume URL:", resume.file.url)
     print("Resume text length:", len(resume_text))
-    print("First 500 characters:")
     print(resume_text[:500])
-    print("=" * 60)
 
     # -----------------------------
     # Detect Resume Skills
