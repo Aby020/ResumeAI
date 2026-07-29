@@ -12,17 +12,11 @@
 
         </button>
 
-        <!-- Search -->
 
-        <form class="d-none d-md-flex ms-3 flex-grow-1">
-
-            <input class="form-control search-input" type="search" placeholder="Search resumes, jobs, ATS...">
-
-        </form>
 
         <!-- Right Side -->
 
-        <div class="navbar-actions ms-auto">
+        <div class="navbar-actions ms-auto d-flex align-items-center gap-2">
 
             <!-- Theme Button -->
 
@@ -32,13 +26,7 @@
 
             </button>
 
-            <!-- Notification -->
 
-            <button class="icon-button">
-
-                <i class="bi bi-bell"></i>
-
-            </button>
 
             <!-- Profile -->
 
@@ -50,42 +38,36 @@
 
                     <span class="profile-name d-none d-sm-inline">
 
-
-                        ResumeAI User
+                        {{ user.first_name|default:user.username }}
 
                     </span>
-
                 </button>
 
                 <ul class="dropdown-menu dropdown-menu-end">
 
                     <li>
 
-                        <a class="dropdown-item" href="#">
+                        <a class="dropdown-item" href="{% url 'profile' %}">
 
-                            My Profile
+                            <i class="bi bi-person-circle me-2"></i>
 
-                        </a>
-
-                    </li>
-
-                    <li>
-
-                        <a class="dropdown-item" href="#">
-
-                            Settings
+                            Profile
 
                         </a>
 
                     </li>
 
                     <li>
+
                         <hr class="dropdown-divider">
+
                     </li>
 
                     <li>
 
-                        <a class="dropdown-item text-danger" href="#">
+                        <a class="dropdown-item text-danger" href="{% url 'logout' %}">
+
+                            <i class="bi bi-box-arrow-right me-2"></i>
 
                             Logout
 

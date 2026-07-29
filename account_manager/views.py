@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import login, logout
+from django.contrib.auth import logout
 from django.contrib.auth.views import LoginView
 from django.contrib import messages
 from django.urls import reverse_lazy
@@ -40,20 +40,20 @@ def register(request):
 
             user = form.save(commit=False)
 
+            user.email = form.cleaned_data["email"].lower()
+
             user.set_password(
                 form.cleaned_data["password"]
             )
 
             user.save()
 
-            login(request, user)
-
             messages.success(
                 request,
-                "Welcome to ResumeAI!"
+                "Account created successfully. Please log in."
             )
 
-            return redirect("dashboard")
+            return redirect("login")
 
     return render(
         request,

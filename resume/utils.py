@@ -1,47 +1,16 @@
-import pdfplumber
 import re
 
-SKILLS = [
-    "python", "java", "c", "c++", "c#", "javascript",
-    "typescript", "php", "go", "rust", "kotlin",
-    "swift", "r", "matlab",
-    "html", "css", "bootstrap", "tailwind",
-    "react", "angular", "vue", "jquery",
-    "django", "flask", "fastapi",
-    "spring", "spring boot",
-    "laravel", "nodejs", "express",
-    "mysql", "postgresql", "mongodb",
-    "sqlite", "oracle", "firebase",
-    "aws", "azure", "gcp",
-    "docker", "kubernetes",
-    "linux", "git", "github",
-    "tensorflow", "pytorch",
-    "opencv", "numpy",
-    "pandas", "scikit-learn",
-    "rest api", "graphql",
-    "figma", "postman",
-    "jira"
-]
-
-
-def extract_text(pdf_path):
-
-    text = ""
-
-    with pdfplumber.open(pdf_path) as pdf:
-
-        for page in pdf.pages:
-
-            page_text = page.extract_text()
-
-            if page_text:
-
-                text += page_text + "\n"
-
-    return text
+from .skills import SKILLS
+from .text_extractor import extract_text
 
 
 def detect_skills(text):
+    """
+    Detect technical skills from resume text.
+    Returns:
+        found_skills,
+        missing_skills
+    """
 
     text = text.lower()
 
@@ -50,7 +19,7 @@ def detect_skills(text):
 
     for skill in SKILLS:
 
-        pattern = r"\b" + re.escape(skill) + r"\b"
+        pattern = r"\b" + re.escape(skill.lower()) + r"\b"
 
         if re.search(pattern, text):
 
@@ -60,130 +29,113 @@ def detect_skills(text):
 
             missing.append(skill.title())
 
-    return sorted(set(found)), sorted(set(missing))
+    return (
+        sorted(set(found)),
+        sorted(set(missing))
+    )
 
 
-def calculate_ats_score(text):
+def normalize_text(text):
+    """
+    Basic text cleanup.
+    """
 
-    text_lower = text.lower()
+    if not text:
+        return ""
 
-    score = 0
+    text = text.replace("\n", " ")
 
-    breakdown = {}
+    text = re.sub(
+        r"\s+",
+        " ",
+        text
+    )
 
-    recommendations = []
+    return text.strip()
 
-    # Name (simple check)
-    if len(text.split()) > 5:
-        score += 5
-        breakdown["Contact"] = 5
-    else:
-        breakdown["Contact"] = 0
-        recommendations.append("Add your full name at the top of the resume.")
 
-    # Email
-    if re.search(r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}", text):
-        score += 5
-        breakdown["Email"] = 5
-    else:
-        breakdown["Email"] = 0
-        recommendations.append("Add a professional email address.")
+def count_words(text):
 
-    # Phone
-    if re.search(r"\+?\d[\d\s\-]{8,15}", text):
-        score += 5
-        breakdown["Phone"] = 5
-    else:
-        breakdown["Phone"] = 0
-        recommendations.append("Add a phone number.")
+    return len(
+        normalize_text(text).split()
+    )
 
-    # Summary
-    if "summary" in text_lower or "profile" in text_lower:
-        score += 10
-        breakdown["Summary"] = 10
-    else:
-        breakdown["Summary"] = 0
-        recommendations.append("Add a professional summary section.")
 
-    # Skills
-    found, _ = detect_skills(text)
+def count_characters(text):
 
-    skill_score = min(len(found), 10)
+    return len(
+        normalize_text(text)
+    )
 
-    skill_score *= 2
 
-    score += skill_score
+def has_email(text):
 
-    breakdown["Skills"] = skill_score
+    return re.search(
+        r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}",
+        text
+    ) is not None
 
-    if skill_score < 10:
-        recommendations.append("Include more relevant technical skills.")
 
-    # Experience
-    if "experience" in text_lower:
+def has_phone(text):
 
-        score += 20
+    return re.search(
+        r"\+?\d[\d\s\-]{8,15}",
+        text
+    ) is not None
 
-        breakdown["Experience"] = 20
 
-    else:
+def has_linkedin(text):
 
-        breakdown["Experience"] = 0
+    return "linkedin.com" in text.lower()
 
-        recommendations.append("Include work experience or internships.")
 
-    # Education
-    if "education" in text_lower:
+def has_github(text):
 
-        score += 15
+    return "github.com" in text.lower()
 
-        breakdown["Education"] = 15
 
-    else:
+def resume_statistics(text):
+    """
+    Statistics shown in dashboard.
+    """
 
-        breakdown["Education"] = 0
+    return {
 
-        recommendations.append("Add an education section.")
+        "word_count": count_words(text),
 
-    # Projects
-    if "project" in text_lower:
+        "character_count": count_characters(text),
 
-        score += 15
+        "has_email": has_email(text),
 
-        breakdown["Projects"] = 15
+        "has_phone": has_phone(text),
 
-    else:
+        "has_linkedin": has_linkedin(text),
 
-        breakdown["Projects"] = 0
+        "has_github": has_github(text)
 
-        recommendations.append("Include academic or personal projects.")
+    }
 
-    # Resume Length
-    words = len(text.split())
 
-    if 250 <= words <= 1000:
+__all__ = [
 
-        score += 10
+    "extract_text",
 
-        breakdown["Length"] = 10
+    "detect_skills",
 
-    else:
+    "normalize_text",
 
-        breakdown["Length"] = 0
+    "count_words",
 
-        recommendations.append("Aim for 250–1000 words.")
+    "count_characters",
 
-    # Formatting
-    if len(text.strip()) > 100:
+    "resume_statistics",
 
-        score += 15
+    "has_email",
 
-        breakdown["Formatting"] = 15
+    "has_phone",
 
-    else:
+    "has_linkedin",
 
-        breakdown["Formatting"] = 0
+    "has_github"
 
-        recommendations.append("Resume content appears too short.")
-
-    return score, breakdown, recommendations
+]

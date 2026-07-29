@@ -1,27 +1,54 @@
 from django import forms
-from .models import Resume
+
+from .models import Resume, ResumeAnalysis
 
 
 class ResumeForm(forms.ModelForm):
+
+    job_description = forms.CharField(
+        required=False,
+        widget=forms.Textarea(
+            attrs={
+                "class": "form-control",
+                "rows": 8,
+                "placeholder": "Paste the job description here (Optional)..."
+            }
+        )
+    )
+
+    job_image = forms.ImageField(
+        required=False,
+        widget=forms.ClearableFileInput(
+            attrs={
+                "class": "form-control",
+                "accept": ".png,.jpg,.jpeg"
+            }
+        )
+    )
 
     class Meta:
 
         model = Resume
 
-        fields = ["title", "file"]
+        fields = [
+            "title",
+            "file",
+        ]
 
         widgets = {
 
             "title": forms.TextInput(
                 attrs={
                     "class": "form-control",
-                    "placeholder": "Enter Resume Name"
+                    "placeholder": "Resume Title"
                 }
             ),
 
-            "file": forms.FileInput(
+            "file": forms.ClearableFileInput(
                 attrs={
-                    "class": "form-control"
+                    "class": "form-control",
+                    "accept": ".pdf"
                 }
             ),
+
         }

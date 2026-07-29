@@ -10,8 +10,7 @@ Login | ResumeAI
 
     <div class="col-lg-5 col-md-7">
 
-        <div class="card border-0 shadow-lg rounded-4"
-             style="background:#1e293b;">
+        <div class="card border-0 shadow-lg rounded-4" style="background:#1e293b;">
 
             <div class="card-body p-5">
 
@@ -41,6 +40,15 @@ Login | ResumeAI
                 </h4>
 
                 <form method="POST">
+                    {% if form.errors %}
+
+                    <div class="alert alert-danger">
+
+                        Invalid username or password.
+
+                    </div>
+
+                    {% endif %}
 
                     {% csrf_token %}
 
@@ -68,14 +76,22 @@ Login | ResumeAI
 
                     </div>
 
-                    <button
-                        class="btn btn-primary w-100 py-2">
+                    <button class="btn btn-primary w-100 py-2">
 
                         <i class="bi bi-box-arrow-in-right"></i>
 
                         Login
 
                     </button>
+                    <div class="text-center mt-3">
+
+                        <a href="{% url 'password_reset' %}" class="text-decoration-none">
+
+                            Forgot Password?
+
+                        </a>
+
+                    </div>
 
                 </form>
 

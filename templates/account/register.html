@@ -10,8 +10,7 @@ Register | ResumeAI
 
     <div class="col-lg-6 col-md-8">
 
-        <div class="card border-0 shadow-lg rounded-4"
-             style="background:#1e293b;">
+        <div class="card border-0 shadow-lg rounded-4" style="background:#1e293b;">
 
             <div class="card-body p-5">
 
@@ -32,6 +31,27 @@ Register | ResumeAI
                     </p>
 
                 </div>
+                {% if form.errors %}
+                <div class="alert alert-danger">
+
+                    <strong>Please fix the following errors:</strong>
+
+                    <ul class="mb-0 mt-2">
+
+                        {% for field in form %}
+                        {% for error in field.errors %}
+                        <li><strong>{{ field.label }}:</strong> {{ error }}</li>
+                        {% endfor %}
+                        {% endfor %}
+
+                        {% for error in form.non_field_errors %}
+                        <li>{{ error }}</li>
+                        {% endfor %}
+
+                    </ul>
+
+                </div>
+                {% endif %}
 
                 <form method="POST">
 
@@ -76,29 +96,44 @@ Register | ResumeAI
                     <div class="mb-3">
 
                         <label class="form-label text-light">
-
                             Password
-
                         </label>
 
-                        {{ form.password }}
+                        <div class="input-group">
+
+                            {{ form.password }}
+
+                            <button class="btn btn-outline-secondary" type="button" id="togglePassword">
+
+                                <i class="bi bi-eye"></i>
+
+                            </button>
+
+                        </div>
 
                     </div>
 
                     <div class="mb-4">
 
                         <label class="form-label text-light">
-
                             Confirm Password
-
                         </label>
 
-                        {{ form.confirm_password }}
+                        <div class="input-group">
+
+                            {{ form.confirm_password }}
+
+                            <button class="btn btn-outline-secondary" type="button" id="toggleConfirmPassword">
+
+                                <i class="bi bi-eye"></i>
+
+                            </button>
+
+                        </div>
 
                     </div>
 
-                    <button
-                        class="btn btn-primary w-100 py-2">
+                    <button class="btn btn-primary w-100 py-2">
 
                         <i class="bi bi-person-check-fill"></i>
 
@@ -129,5 +164,42 @@ Register | ResumeAI
     </div>
 
 </div>
+
+{% endblock %}
+{% block extra_js %}
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    function toggle(buttonId, inputId) {
+
+        const button = document.getElementById(buttonId);
+        const input = document.getElementById(inputId);
+
+        button.addEventListener("click", function () {
+
+            if (input.type === "password") {
+
+                input.type = "text";
+                button.innerHTML = '<i class="bi bi-eye-slash"></i>';
+
+            } else {
+
+                input.type = "password";
+                button.innerHTML = '<i class="bi bi-eye"></i>';
+
+            }
+
+        });
+
+    }
+
+    toggle("togglePassword", "id_password");
+    toggle("toggleConfirmPassword", "id_confirm_password");
+
+});
+
+</script>
 
 {% endblock %}

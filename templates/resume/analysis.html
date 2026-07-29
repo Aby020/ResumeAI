@@ -1,203 +1,255 @@
 {% extends "base.html" %}
 
 {% block title %}
-ATS Analysis
+    Resume Analysis
 {% endblock %}
 
 {% block content %}
 
-<div class="page-heading mb-4">
+<div class="container-fluid">
 
-    <h2 class="fw-bold">
-        <i class="bi bi-clipboard-data"></i>
-        ATS Resume Analysis
-    </h2>
+    <div class="d-flex justify-content-between align-items-center mb-5">
+        <div>
+            <h2 class="fw-bold">
+                <i class="bi bi-file-earmark-bar-graph me-2"></i>
+                Resume Analysis
+            </h2>
+            <p class="text-muted mb-0">
+                AI Powered ATS & Job Match Analysis
+            </p>
+        </div>
 
-    <p class="text-muted">
-        ResumeAI analyzed your resume and detected the following information.
-    </p>
+        <a href="{% url 'resume_history' %}" class="btn btn-outline-primary">
+            <i class="bi bi-arrow-left"></i>
+            Resume History
+        </a>
+    </div>
 
-</div>
+    <!-- Score Cards -->
+    <div class="row g-4 mb-5">
 
-<div class="row g-4">
+        <!-- ATS Score -->
+        <div class="col-lg-6">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body text-center">
+                    <small class="text-muted">
+                        ATS SCORE
+                    </small>
 
-    <!-- Resume Information -->
+                    <h1 class="display-2 fw-bold text-primary my-3">
+                        {{ ats_score }}%
+                    </h1>
 
-    <div class="col-lg-3">
-
-        <div class="card shadow-sm h-100">
-
-            <div class="card-header">
-
-                <h5 class="mb-0">
-
-                    Resume Details
-
-                </h5>
-
+                    <span class="badge bg-primary px-4 py-2">
+                        {{ grade }}
+                    </span>
+                </div>
             </div>
+        </div>
 
-            <div class="card-body">
+        <!-- Job Match -->
+        <div class="col-lg-6">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body text-center">
+                    <small class="text-muted">
+                        JOB MATCH
+                    </small>
 
-                <p>
+                    <h1 class="display-2 fw-bold text-success my-3">
+                        {% if job_fit_score %}
+                            {{ job_fit_score }}%
+                        {% else %}
+                            --
+                        {% endif %}
+                    </h1>
 
-                    <strong>Title</strong><br>
-
-                    {{ resume.title }}
-
-                </p>
-
-                <hr>
-
-                <p>
-
-                    <strong>Uploaded</strong><br>
-
-                    {{ resume.uploaded_at|date:"d M Y - h:i A" }}
-
-                </p>
-
-                <hr>
-
-                <p>
-
-                    <strong>Words</strong><br>
-
-                    {{ word_count }}
-
-                </p>
-
-                <hr>
-
-                <p>
-
-                    <strong>Characters</strong><br>
-
-                    {{ character_count }}
-
-                </p>
-
+                    <span class="badge bg-success px-4 py-2">
+                        {% if job_fit_score %}
+                            Job Description Compared
+                        {% else %}
+                            No Job Description
+                        {% endif %}
+                    </span>
+                </div>
             </div>
-
         </div>
 
     </div>
 
-    <!-- ATS Analysis -->
+    <!-- ATS Breakdown -->
+    <div class="card shadow-sm border-0 mb-5">
+        <div class="card-header bg-transparent border-0 pt-4">
+            <h4 class="fw-bold">
+                <i class="bi bi-bar-chart-line-fill text-primary me-2"></i>
+                ATS Score Breakdown
+            </h4>
+        </div>
 
-    <div class="col-lg-9">
+        <div class="card-body">
+            {% for item in ats_breakdown %}
+                <div class="mb-4">
+                    <div class="d-flex justify-content-between">
+                        <strong>{{ item.category }}</strong>
+                        <strong>{{ item.score }}</strong>
+                    </div>
 
-        <div class="row g-4">
+                    <div class="progress mt-2" style="height: 10px;">
+                        <div
+                            class="progress-bar"
+                            role="progressbar"
+                            style="width: {{ item.percent }}%;"
+                        ></div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
 
-            <!-- Skills Found -->
+    <!-- Strengths & Improvements -->
+    <div class="row g-4 mb-5">
 
-            <div class="col-lg-6">
+        <!-- Strengths -->
+        <div class="col-lg-6">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-header bg-transparent border-0 pt-4">
+                    <h4 class="fw-bold text-success">
+                        <i class="bi bi-check-circle-fill me-2"></i>
+                        Resume Strengths
+                    </h4>
+                </div>
 
-                <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    {% if strengths %}
+                        {% for strength in strengths %}
+                            <div class="d-flex align-items-start mb-3">
+                                <i class="bi bi-check-circle-fill text-success me-3 mt-1"></i>
+                                <span>{{ strength }}</span>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <p class="text-muted">
+                            No strengths detected.
+                        </p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
 
-                    <div class="card-header bg-success text-white">
+        <!-- Improvement Areas -->
+        <div class="col-lg-6">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-header bg-transparent border-0 pt-4">
+                    <h4 class="fw-bold text-warning">
+                        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                        Improvement Areas
+                    </h4>
+                </div>
 
-                        <h5 class="mb-0">
+                <div class="card-body">
+                    {% if improvements %}
+                        {% for item in improvements %}
+                            <div class="d-flex align-items-start mb-3">
+                                <i class="bi bi-arrow-up-circle-fill text-warning me-3 mt-1"></i>
+                                <span>{{ item }}</span>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <p class="text-muted">
+                            No improvements needed.
+                        </p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
 
-                            <i class="bi bi-check-circle-fill"></i>
+    </div>
 
-                            Skills Found
+    {% if job_fit_score %}
 
-                        </h5>
+        <!-- Job Match Skills -->
+        <div class="row g-4 mb-5">
 
+            <!-- Matching Skills -->
+            <div class="col-lg-4">
+                <div class="card shadow-sm border-0 h-100">
+                    <div class="card-header bg-transparent border-0 pt-4">
+                        <h4 class="fw-bold text-success">
+                            <i class="bi bi-check2-circle me-2"></i>
+                            Matching Skills
+                        </h4>
                     </div>
 
                     <div class="card-body">
-
-                        {% if found_skills %}
-
-                            {% for skill in found_skills %}
-
-                                <span class="badge bg-success fs-6 m-1 p-2">
-
+                        {% if matching_skills %}
+                            {% for skill in matching_skills %}
+                                <span class="badge bg-success rounded-pill px-3 py-2 mb-2 me-2">
                                     {{ skill }}
-
                                 </span>
-
                             {% endfor %}
-
                         {% else %}
-
-                            <p>No skills detected.</p>
-
+                            <p class="text-muted mb-0">
+                                No matching skills found.
+                            </p>
                         {% endif %}
-
                     </div>
-
                 </div>
-
             </div>
 
             <!-- Missing Skills -->
-
-            <div class="col-lg-6">
-
-                <div class="card shadow-sm h-100">
-
-                    <div class="card-header bg-danger text-white">
-
-                        <h5 class="mb-0">
-
-                            <i class="bi bi-x-circle-fill"></i>
-
+            <div class="col-lg-4">
+                <div class="card shadow-sm border-0 h-100">
+                    <div class="card-header bg-transparent border-0 pt-4">
+                        <h4 class="fw-bold text-danger">
+                            <i class="bi bi-x-circle me-2"></i>
                             Missing Skills
-
-                        </h5>
-
+                        </h4>
                     </div>
 
                     <div class="card-body">
-
-                        {% for skill in missing_skills|slice:":15" %}
-
-                            <span class="badge bg-secondary fs-6 m-1 p-2">
-
-                                {{ skill }}
-
-                            </span>
-
-                        {% endfor %}
-
+                        {% if job_missing_skills %}
+                            {% for skill in job_missing_skills %}
+                                <span class="badge bg-danger rounded-pill px-3 py-2 mb-2 me-2">
+                                    {{ skill }}
+                                </span>
+                            {% endfor %}
+                        {% else %}
+                            <p class="text-muted mb-0">
+                                Excellent! No missing skills.
+                            </p>
+                        {% endif %}
                     </div>
-
                 </div>
-
             </div>
 
-            <!-- Extracted Text -->
-
-            <div class="col-12">
-
-                <div class="card shadow-sm">
-
-                    <div class="card-header">
-
-                        <h5 class="mb-0">
-
-                            Extracted Resume Text
-
-                        </h5>
-
+            <!-- Extra Skills -->
+            <div class="col-lg-4">
+                <div class="card shadow-sm border-0 h-100">
+                    <div class="card-header bg-transparent border-0 pt-4">
+                        <h4 class="fw-bold text-primary">
+                            <i class="bi bi-stars me-2"></i>
+                            Extra Skills
+                        </h4>
                     </div>
 
                     <div class="card-body">
-
-                        <pre style="white-space: pre-wrap;font-family:inherit;">{{ text }}</pre>
-
+                        {% if extra_skills %}
+                            {% for skill in extra_skills %}
+                                <span class="badge bg-primary rounded-pill px-3 py-2 mb-2 me-2">
+                                    {{ skill }}
+                                </span>
+                            {% endfor %}
+                        {% else %}
+                            <p class="text-muted mb-0">
+                                No extra skills detected.
+                            </p>
+                        {% endif %}
                     </div>
-
                 </div>
-
             </div>
 
         </div>
 
-    </div>
+    {% endif %}
 
 </div>
 

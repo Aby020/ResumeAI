@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="ResumeAI professional admin dashboard template">
-    <title>Resume Dashboard | ResumeAI</title>
+    <title>Dashboard | ResumeAI</title>
 
     <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static 'vendors/bootstrap-icons/bootstrap-icons.css' %}">
@@ -19,7 +19,7 @@
 
         <aside class="admin-sidebar" id="adminSidebar" aria-label="Main navigation">
             <div class="sidebar-header">
-                <a class="brand-mark" href="index.html" aria-label="ResumeAI dashboard">
+                <a class="brand-mark" href="{% url 'dashboard' %}" aria-label="ResumeAI dashboard">
                     <span class="brand-icon"><i class="bi bi-grid-1x2-fill" aria-hidden="true"></i></span>
                     <span class="brand-copy">
                         <span class="brand-title">ResumeAI</span>
@@ -30,67 +30,56 @@
 
             <nav class="sidebar-nav">
 
-                <a class="nav-link active" href="index.html">
+                <a class="nav-link active" href="{% url 'dashboard' %}">
                     <span class="nav-icon"><i class="bi bi-speedometer2"></i></span>
-                    <span class="nav-text">Resume Dashboard</span>
+                    <span class="nav-text"> Dashboard</span>
                 </a>
 
-                <a class="nav-link" href="resume-upload.html">
-                    <span class="nav-icon"><i class="bi bi-cloud-upload"></i></span>
-                    <span class="nav-text">Resume Upload</span>
+                <a class="nav-link" href="{% url 'upload_resume' %}">
+                    <span class="nav-icon"><i class="bi bi-upload"></i></span>
+                    <span class="nav-text">Upload Resume</span>
                 </a>
 
-                <a class="nav-link" href="ats-analysis.html">
-                    <span class="nav-icon"><i class="bi bi-file-earmark-bar-graph"></i></span>
-                    <span class="nav-text">ATS Analysis</span>
-                </a>
 
-                <a class="nav-link" href="ai-suggestions.html">
-                    <span class="nav-icon"><i class="bi bi-stars"></i></span>
-                    <span class="nav-text">AI Suggestions</span>
-                </a>
 
-                <a class="nav-link" href="job-matcher.html">
-                    <span class="nav-icon"><i class="bi bi-briefcase"></i></span>
-                    <span class="nav-text">Job Matcher</span>
-                </a>
 
-                <a class="nav-link" href="resume-history.html">
+
+                <a class="nav-link" href="{% url 'resume_history' %}">
                     <span class="nav-icon"><i class="bi bi-clock-history"></i></span>
                     <span class="nav-text">Resume History</span>
                 </a>
 
-                <a class="nav-link" href="analytics.html">
-                    <span class="nav-icon"><i class="bi bi-bar-chart"></i></span>
-                    <span class="nav-text">Analytics</span>
-                </a>
 
-                <a class="nav-link" href="profile.html">
+
+                <a class="nav-link" href="{% url 'profile' %}">
                     <span class="nav-icon"><i class="bi bi-person-circle"></i></span>
                     <span class="nav-text">Profile</span>
                 </a>
 
-                <a class="nav-link" href="settings.html">
-                    <span class="nav-icon"><i class="bi bi-gear"></i></span>
-                    <span class="nav-text">Settings</span>
-                </a>
 
-                <a class="nav-link" href="logout.html">
+
+                <a class="nav-link" href="{% url 'logout' %}">
                     <span class="nav-icon"><i class="bi bi-box-arrow-right"></i></span>
                     <span class="nav-text">Logout</span>
                 </a>
 
             </nav>
             <div class="sidebar-user">
-                <img class="avatar-img avatar-md sidebar-user-avatar" src="{% static 'images/avatar/avatar.jpg' %}"
-                    alt="Abi Thomas">
-                <strong>Welcome Back</strong>
-                <small>ResumeAI Workspace</small>
-            </div>
 
-            <div class="sidebar-footer">
-                <span class="status-dot"></span>
-                <span class="sidebar-footer-text">ResumeAI Online</span>
+                <i class="bi bi-person-circle display-5 text-primary"></i>
+
+                <strong>
+
+                    {{ user.first_name|default:user.username }}
+
+                </strong>
+
+                <small>
+
+                    Welcome back 👋
+
+                </small>
+
             </div>
         </aside>
 
@@ -104,58 +93,24 @@
                         <span></span>
                     </button>
 
-                    <form class="d-none d-md-flex ms-3 flex-grow-1" role="search">
-                        <input class="form-control search-input" type="search"
-                            placeholder="Search resumes, jobs, skills..." aria-label="Search">
-                    </form>
+
 
                     <div class="navbar-actions ms-auto">
                         <button class="icon-button theme-toggle" type="button" data-theme-toggle
                             aria-label="Switch color theme" title="Switch color theme">
                             <i class="bi bi-moon-stars" data-theme-icon aria-hidden="true"></i>
                         </button>
-                        <div class="dropdown">
-                            <button class="icon-button" type="button" data-bs-toggle="dropdown" aria-expanded="false"
-                                aria-label="Notifications">
-                                <span class="notification-dot"></span>
-                                <i class="bi bi-bell" aria-hidden="true"></i>
-                            </button>
-                            <div class="dropdown-menu dropdown-menu-end notification-menu">
-                                <div class="dropdown-header fw-bold text-body">Notifications</div>
-                                <a class="dropdown-item" href="users.html">
-                                    <span class="notification-title">New user registered</span>
-                                    <span class="notification-time">4 minutes ago</span>
-                                </a>
-                                <a class="dropdown-item" href="charts.html">
-                                    <span class="notification-title">Revenue target reached</span>
-                                    <span class="notification-time">32 minutes ago</span>
-                                </a>
-                                <a class="dropdown-item" href="settings.html">
-                                    <span class="notification-title">Security review completed</span>
-                                    <span class="notification-time">1 hour ago</span>
-                                </a>
-                            </div>
-                        </div>
 
-                        <div class="dropdown">
-                            <button class="profile-button dropdown-toggle" type="button" data-bs-toggle="dropdown"
-                                aria-expanded="false">
-                                <img class="avatar-img avatar-sm" src="{% static 'images/avatar/avatar.jpg' %}"
-                                    alt="Abi Thomas">
-                                <span class="profile-name d-none d-sm-inline">Abi Thomas</span>
-                            </button>
-                            <ul class="dropdown-menu dropdown-menu-end">
-                                <li><a class="dropdown-item" href="profile.html">Profile</a></li>
-                                <li><a class="dropdown-item" href="settings.html">Account settings</a></li>
-                                <li>
-                                    <hr class="dropdown-divider">
-                                </li>
-                                <li><a class="dropdown-item" href="login.html">Sign out</a></li>
-                            </ul>
-                        </div>
+
+
                     </div>
                 </div>
             </nav>
+
+            <div class="sidebar-footer">
+                <span class="status-dot"></span>
+                <span class="sidebar-footer-text">ResumeAI Online</span>
+            </div>
 
             <main class="dashboard-content">
                 <div class="container-fluid px-3 px-lg-4 py-4">
@@ -165,7 +120,7 @@
                             <div>
                                 <p class="eyebrow mb-1">ResumeAI</p>
 
-                                <h1 class="h3 mb-1">Resume Dashboard</h1>
+                                <h1 class="h3 mb-1"> Dashboard</h1>
 
                                 <p class="text-muted mb-0">
                                     Upload resumes, analyze ATS scores, improve resume quality, and discover matching
@@ -173,12 +128,14 @@
                                 </p>
                             </div>
                         </div>
-                        <div class="heading-actions"><button class="btn btn-outline-secondary btn-sm" type="button"><i
-                                    class="bi bi-download" aria-hidden="true"></i> Export Report</button><button <button
-                                class="btn btn-primary btn-sm" type="button">
-                                <i class="bi bi-cloud-upload"></i>
+                        <div class="heading-actions">
+                            <a href="{% url 'upload_resume' %}" class="btn btn-primary btn-sm">
+
+                                <i class="bi bi-upload"></i>
+
                                 Upload Resume
-                            </button>
+
+                            </a>
                         </div>
                     </div>
 
@@ -189,10 +146,14 @@
                                     <span class="metric-label">ATS Score</span>
                                     <span class="metric-icon"><i class="bi bi-award" aria-hidden="true"></i></span>
                                 </div>
-                                <div class="metric-value">92%</div>
+                                <div class="metric-value">
+
+                                    {{ average_ats }}%
+
+                                </div>
                                 <div class="metric-meta">
-                                    <span class="text-success">+5%</span>
-                                    <span>Compared to previous upload</span>
+
+                                    <span>Average ATS Score</span>
                                 </div>
                             </article>
                         </div>
@@ -204,10 +165,14 @@
                                     <span class="metric-icon"><i class="bi bi-file-earmark-text"
                                             aria-hidden="true"></i></span>
                                 </div>
-                                <div class="metric-value">14</div>
+                                <div class="metric-value">
+
+                                    {{ total_resumes }}
+
+                                </div>
                                 <div class="metric-meta">
-                                    <span class="text-success">+8.2%</span>
-                                    <span>14 resumes uploaded</span>
+
+                                    <span>Total Uploaded Resumes</span>
                                 </div>
                             </article>
                         </div>
@@ -218,10 +183,14 @@
                                     <span class="metric-label">Job Matches</span>
                                     <span class="metric-icon"><i class="bi bi-briefcase" aria-hidden="true"></i></span>
                                 </div>
-                                <div class="metric-value">26</div>
+                                <div class="metric-value">
+
+                                    {{ best_job_match }}%
+
+                                </div>
                                 <div class="metric-meta">
-                                    <span class="text-success">+5.1%</span>
-                                    <span>Matching opportunities found</span>
+
+                                    <span>Highest Job Match</span>
                                 </div>
                             </article>
                         </div>
@@ -229,97 +198,169 @@
                         <div class="col-12 col-sm-6 col-xl-3">
                             <article class="metric-card metric-danger">
                                 <div class="metric-top">
-                                    <span class="metric-label">Applications</span>
+                                    <span class="metric-label">Highest ATS</span>
                                     <span class="metric-icon"><i class="bi bi-send-check" aria-hidden="true"></i></span>
                                 </div>
-                                <div class="metric-value">8</div>
+                                <div class="metric-value">
+
+                                    {{ highest_ats }}%
+
+                                </div>
                                 <div class="metric-meta">
-                                    <span class="text-danger">3 urgent</span>
-                                    <span>Applications submitted</span>
+
+                                    <span>Best ATS Score</span>
                                 </div>
                             </article>
                         </div>
                     </section>
 
                     <section class="row g-3 mt-1">
-                        <div class="col-12 col-xl-8">
-                            <div class="panel">
-                                <div class="panel-header">
-                                    <div>
-                                        <h2 class="h5 mb-1 section-title"><i class="bi bi-graph-up-arrow"
-                                                aria-hidden="true"></i><span>ATS Score Progress</span></h2>
-                                        <p class="text-muted mb-0">Track how your resume score improves after each
-                                            update.
-                                        </p>
-                                    </div>
-                                    <a class="btn btn-light btn-sm" href="charts.html">View Analysis</a>
-                                </div>
+                        <div class="card dashboard-card h-100">
 
-                                <div class="chart-bars" aria-label="Sales performance chart">
-                                    <div class="chart-column bar-42"><span></span><small>V1</small></div>
-                                    <div class="chart-column bar-58"><span></span><small>V2</small></div>
-                                    <div class="chart-column bar-51"><span></span><small>V3</small></div>
-                                    <div class="chart-column bar-72"><span></span><small>V4</small></div>
-                                    <div class="chart-column bar-66"><span></span><small>V5</small></div>
-                                    <div class="chart-column bar-83"><span></span><small>V6</small></div>
-                                </div>
+                            <div class="card-header">
+                                <h5 class="mb-0">
+                                    <i class="bi bi-file-earmark-text me-2"></i>
+                                    Latest Resume
+                                </h5>
                             </div>
+
+                            <div class="card-body">
+
+                                {% if latest_resume %}
+
+                                <p><strong>File:</strong> {{ latest_resume.file.name|cut:"resumes/" }}</p>
+
+                                <p><strong>Uploaded:</strong> {{ latest_resume.uploaded_at|date:"d M Y" }}</p>
+
+                                <p class="mb-3">
+
+                                    <strong>ATS Score:</strong>
+
+                                    <span class="badge bg-success">
+
+                                        {{ latest_resume.analysis.ats_score }}%
+
+                                    </span>
+
+                                </p>
+
+                                <a href="{% url 'analyze_resume' latest_resume.id %}" class="btn btn-primary btn-sm">
+                                    View Analysis
+                                </a>
+
+                                {% else %}
+
+                                <p class="text-muted">
+                                    No resumes uploaded yet.
+                                </p>
+
+                                <a href="{% url 'upload_resume' %}" class="btn btn-primary btn-sm">
+                                    Upload Resume
+                                </a>
+
+                                {% endif %}
+
+                            </div>
+
                         </div>
 
-                        <div class="col-12 col-xl-4">
-                            <div class="panel h-100">
-                                <div class="panel-header">
-                                    <div>
-                                        <h2 class="h5 mb-1 section-title"><i class="bi bi-activity"
-                                                aria-hidden="true"></i><span>Recent AI Activity</span></h2>
-                                        <p class="text-muted mb-0">Latest resume processing activities.</p>
-                                    </div>
-                                </div>
+                        <div class="card dashboard-card h-100">
 
-                                <div class="activity-list">
+                            <div class="card-header d-flex justify-content-between align-items-center">
 
-                                    <div class="activity-item">
-                                        <span class="activity-dot bg-primary"></span>
-                                        <div>
-                                            <p class="mb-1 fw-semibold">Resume uploaded successfully</p>
-                                            <p class="text-muted small mb-0">
-                                                Your latest resume has been uploaded and is ready for analysis.
-                                            </p>
-                                        </div>
-                                    </div>
+                                <h5 class="mb-0">
 
-                                    <div class="activity-item">
-                                        <span class="activity-dot bg-success"></span>
-                                        <div>
-                                            <p class="mb-1 fw-semibold">ATS score calculated</p>
-                                            <p class="text-muted small mb-0">
-                                                Your resume achieved an ATS score of 92%.
-                                            </p>
-                                        </div>
-                                    </div>
+                                    <i class="bi bi-clock-history me-2"></i>
 
-                                    <div class="activity-item">
-                                        <span class="activity-dot bg-warning"></span>
-                                        <div>
-                                            <p class="mb-1 fw-semibold">New job matches found</p>
-                                            <p class="text-muted small mb-0">
-                                                18 new job opportunities match your skills.
-                                            </p>
-                                        </div>
-                                    </div>
+                                    Recent Uploads
 
-                                    <div class="activity-item">
-                                        <span class="activity-dot bg-info"></span>
-                                        <div>
-                                            <p class="mb-1 fw-semibold">AI suggestions generated</p>
-                                            <p class="text-muted small mb-0">
-                                                ResumeAI found 7 improvements to increase your ATS score.
-                                            </p>
-                                        </div>
-                                    </div>
+                                </h5>
 
-                                </div>
+                                <a href="{% url 'resume_history' %}" class="btn btn-sm btn-outline-primary">
+
+                                    View All
+
+                                </a>
+
                             </div>
+
+                            <div class="card-body">
+
+                                {% if recent_resumes %}
+
+                                {% for resume in recent_resumes %}
+
+                                <div
+                                    class="d-flex justify-content-between align-items-center py-3 {% if not forloop.last %}border-bottom{% endif %}">
+
+                                    <div>
+
+                                        <h6 class="mb-1">
+
+                                            {{ resume.title }}
+
+                                        </h6>
+
+                                        <small class="text-muted">
+
+                                            {{ resume.uploaded_at|date:"d M Y • h:i A" }}
+
+                                        </small>
+
+                                    </div>
+
+                                    <div class="text-end">
+
+                                        {% if resume.ats_score >= 80 %}
+                                        <span class="badge bg-success">
+                                            {% elif resume.ats_score >= 60 %}
+                                            <span class="badge bg-warning text-dark">
+                                                {% else %}
+                                                <span class="badge bg-danger">
+                                                    {% endif %}
+
+                                                    ATS {{ resume.ats_score }}%
+
+                                                </span>
+
+                                                <br>
+
+                                                <a href="{% url 'analyze_resume' resume.id %}" class="small">
+
+                                                    View Analysis
+
+                                                </a>
+
+                                    </div>
+
+                                </div>
+
+                                {% endfor %}
+
+                                {% else %}
+
+                                <div class="text-center py-4">
+
+                                    <i class="bi bi-file-earmark-text display-5 text-muted"></i>
+
+                                    <p class="mt-3 text-muted">
+
+                                        No resumes uploaded yet.
+
+                                    </p>
+
+                                    <a href="{% url 'upload_resume' %}" class="btn btn-primary btn-sm">
+
+                                        Upload Resume
+
+                                    </a>
+
+                                </div>
+
+                                {% endif %}
+
+                            </div>
+
                         </div>
                     </section>
 
@@ -330,7 +371,8 @@
                                         aria-hidden="true"></i><span>Recent Resume Analysis</span></h2>
                                 <p class="text-muted mb-0">Latest resume analysis and ATS reports.</p>
                             </div>
-                            <a class="btn btn-outline-secondary btn-sm" href="users.html">View All Resumes</a>
+                            <a class="btn btn-outline-secondary btn-sm" href="{% url 'resume_history' %}">View All
+                                Resumes</a>
                         </div>
                         <div class="table-responsive">
                             <table class="table align-middle mb-0">
@@ -346,81 +388,142 @@
                                 </thead>
                                 <tbody>
 
-                                    <tr>
-                                        <td>
-                                            <div class="d-flex align-items-center gap-2">
-                                                <i class="bi bi-file-earmark-pdf-fill fs-4 text-danger"></i>
-                                                <div>
-                                                    <p class="fw-semibold mb-0">Backend_Developer.pdf</p>
-                                                    <p class="text-muted small mb-0">Uploaded Today</p>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>92%</td>
-                                        <td>18</td>
-                                        <td><span class="badge text-bg-success">Optimized</span></td>
-                                        <td>Today</td>
-                                        <td class="text-end">
-                                            <button class="btn btn-light btn-sm">View</button>
-                                        </td>
-                                    </tr>
+                                    {% if recent_resumes %}
+
+                                    {% for resume in recent_resumes %}
 
                                     <tr>
+
                                         <td>
+
                                             <div class="d-flex align-items-center gap-2">
+
                                                 <i class="bi bi-file-earmark-pdf-fill fs-4 text-danger"></i>
+
                                                 <div>
-                                                    <p class="fw-semibold mb-0">Data_Analyst.pdf</p>
-                                                    <p class="text-muted small mb-0">Uploaded Yesterday</p>
+
+                                                    <p class="fw-semibold mb-0">
+
+                                                        {{ resume.title }}
+
+                                                    </p>
+
+                                                    <p class="text-muted small mb-0">
+
+                                                        {{ resume.uploaded_at|date:"d M Y" }}
+
+                                                    </p>
+
                                                 </div>
+
                                             </div>
+
                                         </td>
-                                        <td>87%</td>
-                                        <td>12</td>
-                                        <td><span class="badge text-bg-primary">Good</span></td>
-                                        <td>Yesterday</td>
+
+                                        <td>
+
+                                            {{ resume.ats_score }}%
+
+                                        </td>
+
+                                        <td>
+
+                                            {% if resume.job_match_score %}
+
+                                            {{ resume.job_match_score }}%
+
+                                            {% else %}
+
+                                            --
+
+                                            {% endif %}
+
+                                        </td>
+
+                                        <td>
+
+                                            {% if resume.ats_score >= 90 %}
+
+                                            <span class="badge bg-success">
+
+                                                Excellent
+
+                                            </span>
+
+                                            {% elif resume.ats_score >= 75 %}
+
+                                            <span class="badge bg-primary">
+
+                                                Good
+
+                                            </span>
+
+                                            {% elif resume.ats_score >= 60 %}
+
+                                            <span class="badge bg-warning text-dark">
+
+                                                Average
+
+                                            </span>
+
+                                            {% else %}
+
+                                            <span class="badge bg-danger">
+
+                                                Needs Improvement
+
+                                            </span>
+
+                                            {% endif %}
+
+                                        </td>
+
+                                        <td>
+
+                                            {{ resume.uploaded_at|timesince }} ago
+
+                                        </td>
+
                                         <td class="text-end">
-                                            <button class="btn btn-light btn-sm">View</button>
+
+                                            <a href="{% url 'analyze_resume' resume.id %}"
+                                                class="btn btn-sm btn-primary">
+
+                                                View
+
+                                            </a>
+
                                         </td>
+
                                     </tr>
 
-                                    <tr>
-                                        <td>
-                                            <div class="d-flex align-items-center gap-2">
-                                                <i class="bi bi-file-earmark-pdf-fill fs-4 text-danger"></i>
-                                                <div>
-                                                    <p class="fw-semibold mb-0">Python_Developer.pdf</p>
-                                                    <p class="text-muted small mb-0">Uploaded 2 days ago</p>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>79%</td>
-                                        <td>9</td>
-                                        <td><span class="badge text-bg-warning">Needs Improvement</span></td>
-                                        <td>2 days ago</td>
-                                        <td class="text-end">
-                                            <button class="btn btn-light btn-sm">View</button>
-                                        </td>
-                                    </tr>
+                                    {% endfor %}
+
+                                    {% else %}
 
                                     <tr>
-                                        <td>
-                                            <div class="d-flex align-items-center gap-2">
-                                                <i class="bi bi-file-earmark-pdf-fill fs-4 text-danger"></i>
-                                                <div>
-                                                    <p class="fw-semibold mb-0">Java_FullStack.pdf</p>
-                                                    <p class="text-muted small mb-0">Uploaded Today</p>
-                                                </div>
-                                            </div>
+
+                                        <td colspan="6" class="text-center py-5">
+
+                                            <i class="bi bi-folder2-open display-4 text-muted"></i>
+
+                                            <h5 class="mt-3">
+
+                                                No resumes uploaded yet
+
+                                            </h5>
+
+                                            <a href="{% url 'upload_resume' %}" class="btn btn-primary mt-3">
+
+                                                Upload Your First Resume
+
+                                            </a>
+
                                         </td>
-                                        <td>95%</td>
-                                        <td>24</td>
-                                        <td><span class="badge text-bg-success">Excellent</span></td>
-                                        <td>Today</td>
-                                        <td class="text-end">
-                                            <button class="btn btn-light btn-sm">View</button>
-                                        </td>
+
                                     </tr>
+
+                                    {% endif %}
 
                                 </tbody>
                             </table>

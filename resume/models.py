@@ -32,11 +32,9 @@ class Resume(models.Model):
     )
 
     class Meta:
-
         ordering = ["-uploaded_at"]
 
     def __str__(self):
-
         return f"{self.user.username} - {self.title}"
 
 
@@ -61,7 +59,23 @@ class ResumeAnalysis(models.Model):
         blank=True
     )
 
+    job_image = models.ImageField(
+        upload_to="job_descriptions/",
+        null=True,
+        blank=True
+    )
+
     recommendations = models.JSONField(
+        default=list,
+        blank=True
+    )
+
+    strengths = models.JSONField(
+        default=list,
+        blank=True
+    )
+
+    improvement_areas = models.JSONField(
         default=list,
         blank=True
     )
@@ -71,5 +85,4 @@ class ResumeAnalysis(models.Model):
     )
 
     def __str__(self):
-
         return f"Analysis - {self.resume.title}"

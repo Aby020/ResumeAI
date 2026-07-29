@@ -1,20 +1,23 @@
-{% extends "base.html" %}
+{% extends "public_base.html" %}
 
 {% block title %}
 ResumeAI
 {% endblock %}
 
 {% block content %}
+<div class="container min-vh-100 d-flex align-items-center justify-content-center">
 
-<div class="container py-5">
+    <div class="text-center" style="max-width:700px;">
 
-    <div class="text-center py-5">
+        <div class="mb-4">
 
-        <span class="badge bg-primary mb-4">
+            <span class="badge bg-primary px-4 py-2">
 
-            AI Powered Resume Platform
+                AI Resume Analysis Platform
 
-        </span>
+            </span>
+
+        </div>
 
         <h1 class="display-3 fw-bold mb-4">
 
@@ -26,29 +29,19 @@ ResumeAI
 
         <p class="lead text-muted mb-5">
 
-            Analyze your resume,
-            improve your ATS score,
-            match job descriptions,
-            and receive AI powered suggestions.
+            Analyze your resume, improve your ATS score, discover missing skills, and increase your chances of getting
+            shortlisted.
 
         </p>
 
         <div class="d-flex justify-content-center gap-3">
 
-            <a
-                href="#"
-                class="btn btn-primary btn-lg px-5">
-
+            <a href="{% url 'register' %}" class="btn btn-primary btn-lg px-5">
                 Get Started
-
             </a>
 
-            <a
-                href="#"
-                class="btn btn-outline-light btn-lg px-5">
-
+            <a href="{% url 'login' %}" class="btn btn-outline-light btn-lg px-5">
                 Login
-
             </a>
 
         </div>
@@ -56,5 +49,16 @@ ResumeAI
     </div>
 
 </div>
+<p class="mt-4 text-muted">
+
+    Already have an account?
+
+    <a href="{% url 'login' %}" class="text-decoration-none">
+
+        Sign In
+
+    </a>
+
+</p>
 
 {% endblock %}

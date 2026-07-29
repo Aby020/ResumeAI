@@ -1,35 +1,27 @@
 {% extends "base.html" %}
 
-{% block title %}
-Upload Resume
-{% endblock %}
+{% block title %}Upload Resume{% endblock %}
 
 {% block content %}
 
 <div class="row justify-content-center">
 
-    <div class="col-xl-8 col-lg-10">
+    <div class="col-xl-9">
 
         <div class="text-center mb-5">
 
             <i class="bi bi-cloud-arrow-up display-1 text-primary"></i>
 
-            <h1 class="fw-bold mt-3">
-
-                Upload Resume
-
-            </h1>
+            <h2 class="fw-bold mt-3">Upload Resume</h2>
 
             <p class="text-muted">
-
-                Upload your resume to receive ATS analysis,
-                AI suggestions and job matching.
-
+                Upload your resume for ATS analysis. Optionally paste a job description
+                or upload a job screenshot to receive a Job Match score.
             </p>
 
         </div>
 
-        <div class="card border-0 shadow-lg rounded-4">
+        <div class="card border-0 shadow rounded-4">
 
             <div class="card-body p-5">
 
@@ -40,10 +32,8 @@ Upload Resume
 
                     <div class="mb-4">
 
-                        <label class="form-label">
-
+                        <label class="form-label fw-semibold">
                             Resume Title
-
                         </label>
 
                         {{ form.title }}
@@ -52,115 +42,68 @@ Upload Resume
 
                     <div class="mb-4">
 
-                        <label class="form-label">
-
-                            Resume File
-
+                        <label class="form-label fw-semibold">
+                            Resume (PDF)
                         </label>
 
                         {{ form.file }}
 
                     </div>
 
-                    <div class="d-grid">
+                    <hr class="my-5">
 
-                        <button
-                            class="btn btn-primary btn-lg">
+                    <h4 class="mb-3">
+                        Job Description
+                        <small class="text-muted">(Optional)</small>
+                    </h4>
 
-                            <i class="bi bi-cloud-upload"></i>
+                    <div class="mb-4">
 
-                            Upload Resume
+                        {{ form.job_description }}
+
+                        <small class="text-muted">
+                            Paste the job description if available.
+                        </small>
+
+                    </div>
+                    {% comment %}
+
+                    <div class="text-center my-4">
+
+                        <span class="badge bg-secondary px-4 py-2">
+                            OR
+                        </span>
+
+                    </div>
+
+                    <div class="mb-4">
+
+                        <label class="form-label fw-semibold">
+                            Upload Job Screenshot
+                        </label>
+
+                        {{ form.job_image }}
+
+                        <small class="text-muted d-block mt-2">
+                            Supported: JPG, JPEG, PNG
+                        </small>
+
+                    </div>
+                    {% endcomment %}
+
+                    <div class="d-grid mt-5">
+
+                        <button class="btn btn-primary btn-lg">
+
+                            <i class="bi bi-stars"></i>
+
+                            Analyze Resume
 
                         </button>
 
                     </div>
 
                 </form>
-
-            </div>
-
-        </div>
-
-        <div class="row mt-5">
-
-            <div class="col-md-4 mb-3">
-
-                <div class="card h-100 border-primary">
-
-                    <div class="card-body text-center">
-
-                        <i class="bi bi-award display-5 text-primary"></i>
-
-                        <h5 class="mt-3">
-
-                            ATS Analysis
-
-                        </h5>
-
-                        <p class="text-muted">
-
-                            Check whether your resume
-                            is ATS friendly.
-
-                        </p>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-            <div class="col-md-4 mb-3">
-
-                <div class="card h-100 border-success">
-
-                    <div class="card-body text-center">
-
-                        <i class="bi bi-stars display-5 text-success"></i>
-
-                        <h5 class="mt-3">
-
-                            AI Suggestions
-
-                        </h5>
-
-                        <p class="text-muted">
-
-                            Improve your resume with
-                            intelligent recommendations.
-
-                        </p>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-            <div class="col-md-4 mb-3">
-
-                <div class="card h-100 border-warning">
-
-                    <div class="card-body text-center">
-
-                        <i class="bi bi-briefcase display-5 text-warning"></i>
-
-                        <h5 class="mt-3">
-
-                            Job Match
-
-                        </h5>
-
-                        <p class="text-muted">
-
-                            Compare your resume with
-                            future job descriptions.
-
-                        </p>
-
-                    </div>
-
-                </div>
 
             </div>
 

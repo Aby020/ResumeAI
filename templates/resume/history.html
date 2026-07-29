@@ -52,6 +52,10 @@ My Resumes
 
                         <th>Resume</th>
 
+                        <th class="text-center">ATS Score</th>
+
+                        <th class="text-center">Job Match</th>
+
                         <th>Uploaded</th>
 
                         <th class="text-center">Actions</th>
@@ -91,6 +95,48 @@ My Resumes
                             </div>
 
                         </td>
+                        <td class="text-center">
+
+                            {% if resume.analysis %}
+
+                            <span class="badge bg-primary">
+
+                                {{ resume.analysis.ats_score }}%
+
+                            </span>
+
+                            {% else %}
+
+                            <span class="badge bg-secondary">
+
+                                --
+
+                            </span>
+
+                            {% endif %}
+
+                        </td>
+                        <td class="text-center">
+
+                            {% if resume.analysis.job_match_score %}
+
+                            <span class="badge bg-success">
+
+                                {{ resume.analysis.job_match_score }}%
+
+                            </span>
+
+                            {% else %}
+
+                            <span class="badge bg-secondary">
+
+                                --
+
+                            </span>
+
+                            {% endif %}
+
+                        </td>
 
                         <td>
 
@@ -102,26 +148,19 @@ My Resumes
 
                             <div class="d-flex justify-content-center gap-2">
 
-                                <a
-                                    href="{% url 'analyze_resume' resume.id %}"
-                                    class="btn btn-primary btn-sm">
+                                <a href="{% url 'analyze_resume' resume.id %}" class="btn btn-primary btn-sm">
 
                                     <i class="bi bi-search"></i>
 
                                 </a>
 
-                                <a
-                                    href="{{ resume.file.url }}"
-                                    class="btn btn-success btn-sm"
-                                    target="_blank">
+                                <a href="{{ resume.file.url }}" class="btn btn-success btn-sm" target="_blank">
 
                                     <i class="bi bi-download"></i>
 
                                 </a>
 
-                                <a
-                                    href="{% url 'delete_resume' resume.id %}"
-                                    class="btn btn-danger btn-sm"
+                                <a href="{% url 'delete_resume' resume.id %}" class="btn btn-danger btn-sm"
                                     onclick="return confirm('Are you sure you want to delete this resume?');">
 
                                     <i class="bi bi-trash"></i>
