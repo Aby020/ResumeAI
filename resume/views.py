@@ -99,7 +99,7 @@ def analyze_resume(request, resume_id):
     # -----------------------------
     # Extract Resume Text
     # -----------------------------
-    if not resume.file or not os.path.exists(resume.file.path):
+    if not resume.file:
         messages.error(
             request,
             "Resume file not found. It may have been removed after a server restart. Please upload the resume again.",
@@ -107,7 +107,7 @@ def analyze_resume(request, resume_id):
         return redirect("upload_resume")
 
     resume_text = extract_text(
-        resume.file.path,
+        resume.file.url,
     )
 
     # -----------------------------
@@ -140,9 +140,7 @@ def analyze_resume(request, resume_id):
     analysis.ats_score = ats["ats_score"]
 
     analysis.job_match_score = (
-        job["job_fit_score"]
-        if job["job_fit_score"] is not None
-        else None
+        job["job_fit_score"] if job["job_fit_score"] is not None else None
     )
 
     analysis.recommendations = ats["recommendations"]
@@ -236,11 +234,8 @@ def delete_resume(request, resume_id):
 
     # Delete uploaded PDF
     try:
-        if (
-            resume.file
-            and os.path.isfile(
-                resume.file.path,
-            )
+        if resume.file and os.path.isfile(
+            resume.file.path,
         ):
             os.remove(
                 resume.file.path,
@@ -254,11 +249,8 @@ def delete_resume(request, resume_id):
             resume,
             "analysis",
         ):
-            if (
-                resume.analysis.job_image
-                and os.path.isfile(
-                    resume.analysis.job_image.path,
-                )
+            if resume.analysis.job_image and os.path.isfile(
+                resume.analysis.job_image.path,
             ):
                 os.remove(
                     resume.analysis.job_image.path,
