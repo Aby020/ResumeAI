@@ -64,6 +64,10 @@ class ResumeAnalysis(models.Model):
         null=True,
         blank=True
     )
+    resume_json = models.JSONField(
+        default=dict,
+        blank=True
+    )
 
     recommendations = models.JSONField(
         default=list,
