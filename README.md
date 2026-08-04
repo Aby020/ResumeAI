@@ -467,7 +467,7 @@ Passionate about building intelligent web applications, scalable backend systems
 
 If you found this project helpful, please consider giving it a ⭐ on GitHub.
 
-Your support motivates me to continue building innovative, production-quality software and sharing open-source projects with the developer community.
+
 
 If you have suggestions, feature requests, or would like to collaborate, feel free to connect with me on GitHub or LinkedIn.
 
