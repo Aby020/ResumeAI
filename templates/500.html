@@ -1,0 +1,43 @@
+{% extends "auth_base.html" %}
+
+{% block title %}Something Went Wrong | ResumeAI{% endblock %}
+
+{% block content %}
+
+<div class="row justify-content-center">
+
+    <div class="col-md-6 col-lg-5">
+
+        <div class="auth-card">
+
+            <div class="card-body p-4 p-md-5 text-center">
+
+                <div class="auth-brand mb-4 mx-auto">
+                    <i class="bi bi-exclamation-triangle" aria-hidden="true"></i>
+                </div>
+
+                <p class="eyebrow mb-1">Error 500</p>
+
+                <h2 class="fw-bold mb-3">Something Went Wrong</h2>
+
+                <p class="text-muted mb-4">
+                    An unexpected error occurred on our end. Please try again in a moment.
+                </p>
+
+                <div class="d-flex justify-content-center gap-2 flex-wrap">
+                    <a href="{% url 'dashboard' %}" class="btn btn-primary">
+                        <i class="bi bi-speedometer2 me-1" aria-hidden="true"></i>
+                        Go to Dashboard
+                    </a>
+                    <a href="{% url 'login' %}" class="btn btn-outline-secondary">Sign In</a>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

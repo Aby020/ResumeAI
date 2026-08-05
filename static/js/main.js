@@ -57,6 +57,81 @@
     return "light";
   }
 
+  function initPasswordToggles() {
+    var buttons = document.querySelectorAll("[data-password-toggle]");
+    Array.prototype.forEach.call(buttons, function (button) {
+      var target = document.querySelector(button.getAttribute("data-password-target"));
+      if (!target) {
+        return;
+      }
+
+      button.addEventListener("click", function () {
+        var isPassword = target.type === "password";
+        target.type = isPassword ? "text" : "password";
+        button.setAttribute("aria-label", isPassword ? "Hide password" : "Show password");
+
+        var icon = button.querySelector("i");
+        if (icon) {
+          icon.className = isPassword ? "bi bi-eye-slash" : "bi bi-eye";
+        }
+      });
+    });
+  }
+
+  function initDropZones() {
+    var zones = document.querySelectorAll("[data-drop-zone]");
+    Array.prototype.forEach.call(zones, function (zone) {
+      var input = document.querySelector(zone.getAttribute("data-drop-input") || 'input[type="file"]');
+      var filenameEl = zone.querySelector("[data-drop-filename]");
+      if (!input) {
+        return;
+      }
+
+      function syncFile() {
+        var file = input.files && input.files[0];
+        if (file) {
+          zone.classList.add("has-file");
+          if (filenameEl) {
+            filenameEl.textContent = file.name;
+          }
+        } else {
+          zone.classList.remove("has-file");
+          if (filenameEl) {
+            filenameEl.textContent = "";
+          }
+        }
+      }
+
+      input.addEventListener("change", syncFile);
+
+      zone.addEventListener("click", function () {
+        input.click();
+      });
+
+      ["dragenter", "dragover"].forEach(function (eventName) {
+        zone.addEventListener(eventName, function (event) {
+          event.preventDefault();
+          zone.classList.add("dragover");
+        });
+      });
+
+      ["dragleave", "drop"].forEach(function (eventName) {
+        zone.addEventListener(eventName, function (event) {
+          event.preventDefault();
+          zone.classList.remove("dragover");
+        });
+      });
+
+      zone.addEventListener("drop", function (event) {
+        var files = event.dataTransfer && event.dataTransfer.files;
+        if (files && files.length) {
+          input.files = files;
+          syncFile();
+        }
+      });
+    });
+  }
+
   onReady(function () {
     var body = document.body;
     var sidebarToggle = document.querySelector("[data-sidebar-toggle]");
@@ -108,6 +183,8 @@
     }
 
     initThemeToggle();
+    initPasswordToggles();
+    initDropZones();
 
     if (!sidebarToggle) {
       return;

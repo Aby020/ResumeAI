@@ -1,26 +1,63 @@
-# Python
+# ─── Python ───────────────────────────────────────────────────────────────
 __pycache__/
 *.py[cod]
 *.pyo
 *.pyd
+*.so
 
-# Virtual Environment
+# ─── Virtual environments ─────────────────────────────────────────────────
 venv/
+.venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# ─── Environment variables / secrets ──────────────────────────────────────
 .env
+.env.*
+!.env.example
 
-# Database
-db.sqlite3
-
-# Media
-media/
-
-# Static files
+# ─── Django ───────────────────────────────────────────────────────────────
+*.sqlite3
+*.sqlite
+*.db
 staticfiles/
+media/
+uploads/
+logs/
+*.log
 
-# IDE
+# ─── Testing & coverage ───────────────────────────────────────────────────
+.coverage
+coverage/
+htmlcov/
+.pytest_cache/
+.mypy_cache/
+.tox/
+.nox/
+
+# ─── Frontend build output ────────────────────────────────────────────────
+node_modules/
+dist/
+build/
+staticfiles_build/
+
+# ─── IDE / editor ─────────────────────────────────────────────────────────
 .vscode/
 .idea/
+*.swp
+*.swo
+*~
 
-# OS
+# ─── OS ───────────────────────────────────────────────────────────────────
 .DS_Store
 Thumbs.db
+Desktop.ini
+
+# ─── Local tooling / Claude Code ──────────────────────────────────────────
+.claude/
+
+# ─── Large media not meant for the repo ───────────────────────────────────
+screenshots/*.mp4
+screenshots/*.gif

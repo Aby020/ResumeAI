@@ -1,207 +1,167 @@
-# 📄 ResumeAI
-
 <div align="center">
+
+# 📄 ResumeAI
 
 ### Intelligent Resume Analysis & ATS Optimization Platform
 
-A modern full-stack Django web application that empowers job seekers to analyze resumes, calculate ATS compatibility scores, compare resumes against job descriptions, and receive actionable insights through a secure, responsive, and AI-assisted platform.
+Upload a PDF resume, optionally paste a target job description, and get an
+**instant, honest breakdown of ATS compatibility** — scored by a weighted
+rubric, matched against the role, and explained with prioritized,
+actionable recommendations.
 
-![Python](https://img.shields.io/badge/Python-3.12-blue?logo=python)
-![Django](https://img.shields.io/badge/Django-5.2-092E20?logo=django)
-![Bootstrap](https://img.shields.io/badge/Bootstrap-5-7952B3?logo=bootstrap)
-![SQLite](https://img.shields.io/badge/SQLite-003B57?logo=sqlite)
-![Render](https://img.shields.io/badge/Deploy-Render-46E3B7?logo=render)
+A production-grade full-stack Django application with secure authentication,
+PDF parsing, spaCy-powered NLP, persistent analysis history, a single-pass
+caching pipeline, and a premium dark-theme SaaS interface.
+
+---
+
+![Python](https://img.shields.io/badge/Python-3.12-3776AB?logo=python&logoColor=white)
+![Django](https://img.shields.io/badge/Django-5.2-092E20?logo=django&logoColor=white)
+![Bootstrap](https://img.shields.io/badge/Bootstrap-5-7952B3?logo=bootstrap&logoColor=white)
+![SQLite](https://img.shields.io/badge/SQLite-003B57?logo=sqlite&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?logo=postgresql&logoColor=white)
+![spaCy](https://img.shields.io/badge/spaCy-3.8-09A3D5?logo=spacy&logoColor=white)
+![pdfplumber](https://img.shields.io/badge/pdfplumber-0.11-77AA55)
+![Render](https://img.shields.io/badge/Deploy-Render-46E3B7?logo=render&logoColor=white)
+![Tests](https://img.shields.io/badge/tests-88%20passing-2ea44f)
 ![License](https://img.shields.io/badge/License-MIT-yellow)
 
 </div>
 
-<p align="center">
-  <img src="screenshots/landing-page.png" alt="ResumeAI Landing Page" width="100%">
-</p>
+---
 
 ## 📖 Project Overview
 
-ResumeAI is a full-stack Django web application designed to help job seekers improve their resumes through intelligent resume analysis and ATS (Applicant Tracking System) optimization.
+ResumeAI helps job seekers build resumes that actually **pass Applicant
+Tracking Systems (ATS)** — the software recruiters use to filter candidates
+before a human ever reads a resume.
 
-The platform enables users to securely upload resumes, compare them against job descriptions, calculate ATS compatibility scores, identify missing keywords, review resume strengths, and receive improvement suggestions through an intuitive dashboard.
+The analysis engine is not a keyword counter. It **parses the resume into a
+structured document** (sections, canonical skills, entities, quality features),
+then evaluates it against a **weighted 100-point rubric** and a **weighted
+job-match composite**. Aliases and abbreviations are resolved before any
+comparison — so `JS` in a resume matches `JavaScript` in a job description,
+and `ML` matches `Machine Learning`.
 
-Built with Django and Bootstrap, ResumeAI demonstrates practical implementation of secure authentication, file management, resume parsing, ATS scoring, keyword matching, CRUD operations, and responsive web design while providing a real-world solution for modern recruitment workflows.
+What you get for every resume:
 
-Whether preparing for internships, software engineering positions, or professional career opportunities, ResumeAI helps users build stronger resumes and improve their chances of passing Applicant Tracking Systems.
+- ✅ **ATS compatibility score** — 0–100 with a grade band, broken down across 10 weighted categories
+- ✅ **Resume strengths & improvement areas** — prioritized, specific feedback
+- ✅ **Job-match percentage** — how well the resume lines up with a pasted job posting, with matching / missing / extra skills
+- ✅ **Missing-experience insights** — e.g. *"The job asks for 5+ years of Django; your resume shows ~2."*
+- ✅ **Persistent history** — every analysis is saved and cached, so revisiting a resume is instant
+
+Built with a clean **backend-first architecture**: a thin view layer, a service
+layer that owns the pipeline, and a caching layer that makes re-analysis free.
+
+---
 
 ## ✨ Key Features
 
-### 👤 User Management
+| Area | Capabilities |
+|------|--------------|
+| **👤 Accounts** | Secure registration & login, profile management, password reset via email, session handling, Django auth hardening |
+| **📄 Resumes** | PDF upload with drag & drop, persistent storage, history with **View / Download / Delete**, storage-safe deletion |
+| **🤖 ATS Analysis** | Weighted 100-point rubric across 10 categories, grade bands, per-category breakdown, strengths & improvement areas |
+| **💼 Job Matching** | Weighted composite (skills · experience · education · certifications · title · domain), matching/missing/extra skills, missing-experience detection |
+| **🔍 NLP Intelligence** | spaCy lemmatization, canonical skill aliasing (`JS` ≡ `JavaScript`), section segmentation, degree/certification/title extraction |
+| **⚡ Performance** | Single-pass parsing, `resume_json` cache (no re-parse on reload), lazy-loaded spaCy, optimized dashboard queries |
+| **🎨 UX** | Light/dark theme toggle, responsive design, accessibility, premium SaaS styling across every page |
 
-- Secure User Registration
-- User Login & Authentication
-- Profile Management
-- Password Reset
-- Session Management
+---
 
-### 📄 Resume Management
+## 🎬 Demo
 
-- Upload Resume (PDF)
-- Resume Storage
-- Resume History
-- Resume Management
-- Resume Preview
+Click play for a walkthrough of the landing page:
 
-### 🤖 AI Resume Analysis
+<div align="center">
 
-- ATS Compatibility Score
-- Resume Strength Analysis
-- Improvement Suggestions
-- Keyword Analysis
-- Resume Quality Evaluation
-- Skill Identification
+<video src="screenshots/home-demo.mp4" controls width="90%"></video>
+<br>
+<em>▶ Landing page demo — `screenshots/home-demo.mp4`</em>
 
-### 💼 Job Description Matching
+</div>
 
-- Upload Job Description
-- Resume vs Job Comparison
-- Match Percentage
-- Missing Keyword Detection
-- ATS Optimization Guidance
-
-### 📊 Analytics Dashboard
-
-- Resume Statistics
-- ATS Score Visualization
-- Resume History
-- User Dashboard
-- Analysis Reports
-
-### 🔒 Security Features
-
-- Django Authentication
-- Protected User Dashboard
-- Secure File Upload
-- Session Management
-- Environment Variable Configuration
-
-### 🎨 User Experience
-
-- Modern Responsive Interface
-- Bootstrap 5 Components
-- Clean Dashboard Design
-- Mobile-Friendly Layout
-- Simple Navigation
+---
 
 ## 📸 Screenshots
 
-### 🏠 Landing Page
-
-The landing page introduces ResumeAI with an overview of the platform, highlighting ATS analysis, resume optimization, and intelligent job matching features.
+### 🔐 Authentication
 
 <p align="center">
-  <img src="screenshots/landing-page.png" width="100%" alt="Landing Page">
+  <img src="screenshots/login.png" width="48%" alt="User Login">
+  <img src="screenshots/register.png" width="48%" alt="User Registration">
+  <br>
+  <em>Login & registration — dark-theme auth cards with password visibility toggles</em>
+</p>
+
+### 📤 Upload Resume
+
+Paste a job description (optional) alongside your resume — the ATS score is
+blended with job relevance when one is provided.
+
+<p align="center">
+  <img src="screenshots/upload-resume.png" width="90%" alt="Resume Upload">
+  <br>
+  <em>Drag-and-drop PDF upload with optional job-description matching</em>
+</p>
+
+### 🤖 Analysis Results
+
+The analysis page shows two score rings — **ATS Score** and **Job Match** — with
+grade labels and a per-category breakdown of the weighted rubric.
+
+<p align="center">
+  <img src="screenshots/resume-analysis.png" width="90%" alt="Resume Analysis Results">
+  <br>
+  <em>ATS & job-match score rings with category-level breakdown bars</em>
+</p>
+
+### 🧠 Strengths & Insights
+
+Scrolling down the same page reveals categorized strengths and improvement
+areas, plus matching / missing / extra skills.
+
+<p align="center">
+  <img src="screenshots/ats-job.png" width="90%" alt="Strengths and Improvement Areas">
+  <br>
+  <em>Categorized feedback lists and skill-level match detail</em>
+</p>
+
+### 📊 Dashboard & History
+
+<p align="center">
+  <img src="screenshots/dashboard.png" width="90%" alt="User Dashboard">
+  <br>
+  <em>Metric cards (avg ATS, resume count, best match) + recent resumes with tiered score badges</em>
+</p>
+
+<p align="center">
+  <img src="screenshots/resume-history.png" width="48%" alt="Resume History">
+  <img src="screenshots/profile.png" width="48%" alt="User Profile">
+  <br>
+  <em>Resume history with colored ATS badges & quick actions · Profile with account info and security actions</em>
 </p>
 
 ---
-
-### 🔐 User Login
-
-Users can securely access their accounts to manage resumes and view personalized ATS analysis.
-
-<p align="center">
-  <img src="screenshots/login.png" width="100%" alt="User Login">
-</p>
-
----
-
-### 👤 User Registration
-
-New users can create an account quickly and securely before accessing ResumeAI's features.
-
-<p align="center">
-  <img src="screenshots/register.png" width="100%" alt="User Registration">
-</p>
-
----
-
-### 📊 User Dashboard
-
-The dashboard provides quick access to uploaded resumes, ATS scores, recent analyses, and profile management.
-
-<p align="center">
-  <img src="screenshots/dashboard.png" width="100%" alt="Dashboard">
-</p>
-
----
-
-### 📄 Resume Upload
-
-Users can securely upload PDF resumes for analysis and ATS evaluation.
-
-<p align="center">
-  <img src="screenshots/upload-resume.png" width="100%" alt="Resume Upload">
-</p>
-
----
-
-### 🤖 Resume Analysis
-
-ResumeAI evaluates uploaded resumes, calculates ATS compatibility scores, identifies missing keywords, and provides actionable improvement suggestions.
-
-<p align="center">
-  <img src="screenshots/resume-analysis.png" width="100%" alt="Resume Analysis">
-</p>
-
----
-
-### 📂 Resume History
-
-Users can view previously uploaded resumes, review historical ATS scores, and revisit earlier analyses.
-
-<p align="center">
-  <img src="screenshots/resume-history.png" width="100%" alt="Resume History">
-</p>
-
----
-
-### 👨‍💻 User Profile
-
-The profile page allows users to manage personal information and account settings through a clean interface.
-
-<p align="center">
-  <img src="screenshots/profile.png" width="100%" alt="User Profile">
-</p>
 
 ## 🛠️ Technology Stack
 
-| Category | Technologies |
-|-----------|--------------|
-| **Backend** | Python, Django 5.2 |
-| **Frontend** | HTML5, CSS3, Bootstrap 5, JavaScript |
-| **Database** | SQLite (Development), PostgreSQL (Production Ready) |
-| **Authentication** | Django Authentication |
-| **File Processing** | PDF Resume Upload & Parsing |
-| **Development Tools** | VS Code, Git, GitHub |
+| Category | Technology |
+|----------|------------|
+| **Backend** | Python 3.12, Django 5.2 |
+| **Frontend** | HTML5, CSS3 (custom design system), Bootstrap 5, JavaScript |
+| **Database** | SQLite (development) · PostgreSQL via `DATABASE_URL` (production) |
+| **PDF Parsing** | pdfplumber 0.11 — text extraction, scanned-PDF detection |
+| **NLP** | spaCy 3.8 + `en_core_web_sm` — lemmatization, NER, canonical skill matching (graceful fallback without the model) |
+| **Auth** | Django built-in authentication + hardened password validators |
+| **Storage** | Local filesystem (dev) · Cloudinary (production) |
+| **Static Assets** | WhiteNoise (compressed manifest storage) |
+| **Server** | Gunicorn (production) |
+| **Config** | python-decouple + `.env` |
 | **Deployment** | Render |
-| **Configuration** | Environment Variables (.env) |
 
-## 📂 Project Structure
-
-```text
-ResumeAI/
-│
-├── account_manager/          # User authentication & account management
-├── analytics/                # ATS scoring & resume analysis
-├── core/                     # Core project configuration
-├── dashboard/                # User dashboard
-├── jobs/                     # Job description matching
-├── resume/                   # Resume upload & management
-├── templates/                # HTML templates
-├── static/                   # CSS, JavaScript & assets
-├── media/                    # Uploaded resumes
-├── screenshots/              # README screenshots
-│
-├── manage.py
-├── requirements.txt
-├── README.md
-└── .env
-```
+---
 
 ## 🏗️ System Architecture
 
@@ -209,33 +169,90 @@ ResumeAI/
                      User Browser
                            │
                            ▼
-                 Bootstrap 5 Interface
+                 Bootstrap 5 · Design System UI
                            │
                            ▼
-                Django URL Routing System
+                Django URL Routing (ResumeAI/urls.py)
                            │
                            ▼
-                Django Views & Business Logic
+                Django Views (thin) · services.py
+                           │
+                           ▼
+               PDF bytes ──► parse_pdf ──► text
+                           │
+                           ▼
+              analyzer.analyze ──► ResumeDocument
+                  (sections · skills · entities · features)
                            │
         ┌──────────────────┼──────────────────┐
         ▼                  ▼                  ▼
- User Authentication   Resume Module    Analytics Engine
-        │                  │                  │
-        └──────────────────┼──────────────────┘
-                           ▼
-                  ATS Analysis Engine
+  ats_engine           job_matcher       resume statistics
+  weighted rubric      weighted          (dashboard)
+  (100 pts)            composite
                            │
                            ▼
-              Job Description Matching
-                           │
-                           ▼
-                    SQLite Database
+              resume_json cache + Database
+              (SQLite / PostgreSQL)
                            │
                            ▼
                   Analysis Reports & History
 ```
 
+**Single-pass extraction:** the PDF is parsed once into a `ResumeDocument`
+dataclass; the ATS scorer, the job matcher, and the dashboard all consume that
+same object. No stage re-parses or re-scans the raw text.
+
+> 📖 For a deep dive into the pipeline, caching, and module responsibilities see
+> **[docs/BACKEND_ARCHITECTURE.md](docs/BACKEND_ARCHITECTURE.md)**.
+
+---
+
+## 📂 Project Structure
+
+```text
+ResumeAI/
+│
+├── account_manager/        # User authentication & account management
+├── core/                   # Landing page & core configuration
+├── dashboard/              # User dashboard views (optimized queries)
+├── resume/                 # Upload, analysis, ATS scoring & job matching
+│   ├── views.py            # Thin views (upload, history, analyze, delete)
+│   ├── services.py         # Service layer: pipeline + resume_json cache
+│   ├── analyzer.py         # ResumeDocument orchestrator (single-pass)
+│   ├── text_extractor.py   # PDF → text (pdfplumber, scanned-PDF flag)
+│   ├── ats_engine.py       # Weighted ATS rubric (10 categories, 100 pts)
+│   ├── job_matcher.py      # Weighted job-match composite (100 pts)
+│   ├── skills.py           # Canonical skill taxonomy + category weights
+│   ├── nlp/                # Canonicalization, sections, entities, features
+│   └── tests.py            # Unit + integration suite
+├── ResumeAI/               # Project settings & URL routing
+├── docs/                   # Backend architecture reference
+├── templates/              # Shared HTML templates (base, auth, errors)
+│   ├── components/         # Sidebar, navbar, footer
+│   ├── account/            # Login, register, profile, password reset
+│   ├── resume/             # Upload, analysis, history
+│   ├── dashboard/          # Dashboard page
+│   ├── core/               # Landing page
+│   └── registration/       # Password-reset email templates
+├── static/                 # CSS, JavaScript, Bootstrap & icons
+│   ├── css/style.css       # Design system (CSS variables, light/dark)
+│   ├── js/main.js          # Sidebar, theme, password & drag-drop handlers
+│   └── images/favicon/     # Favicon assets
+├── media/                  # Uploaded resumes (dev storage)
+├── screenshots/            # README screenshots & demo video
+│
+├── manage.py
+├── requirements.txt
+├── .env.example
+└── README.md
+```
+
+---
+
 ## ⚙️ Installation & Setup
+
+> ⚙️ **Python 3.12 is required.** The spaCy 3.8 ecosystem (including the
+> `en_core_web_sm` model) does not yet support Python 3.13.
 
 ### 1️⃣ Clone the Repository
 
@@ -244,25 +261,19 @@ git clone https://github.com/Aby020/ResumeAI.git
 cd ResumeAI
 ```
 
----
-
 ### 2️⃣ Create a Virtual Environment
 
-#### Windows
-
+**Windows**
 ```bash
-python -m venv .venv
-.venv\Scripts\activate
+python -m venv venv
+venv\Scripts\activate
 ```
 
-#### Linux / macOS
-
+**Linux / macOS**
 ```bash
-python3 -m venv .venv
-source .venv/bin/activate
+python3 -m venv venv
+source venv/bin/activate
 ```
-
----
 
 ### 3️⃣ Install Dependencies
 
@@ -270,174 +281,254 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
----
+### 4️⃣ Install the spaCy English Model (recommended)
 
-### 4️⃣ Configure Environment Variables
+The analyzer works without it (plain-token fallback), but installing the model
+unlocks lemmatization and entity recognition for higher-quality scoring:
 
-Create a `.env` file in the project root.
-
-```env
-SECRET_KEY=your_secret_key
-
-DEBUG=True
-
-
-https://github.com/Aby020
-
-LinkedIn
-
-(www.linkedin.com/in/abi-thomas-39633a200)
-
----
-
-EMAIL_HOST=smtp.gmail.com
-EMAIL_PORT=587
-EMAIL_USE_TLS=True
-EMAIL_HOST_USER=your_email@gmail.com
-EMAIL_HOST_PASSWORD=your_app_password
-SERVER_EMAIL=your_email@gmail.com
+```bash
+python -m spacy download en_core_web_sm
 ```
 
----
+### 5️⃣ Configure Environment Variables
 
-### 5️⃣ Apply Database Migrations
+Copy `.env.example` to `.env` and fill in your values:
+
+```bash
+cp .env.example .env   # Windows: copy .env.example .env
+```
+
+See the [Environment Variables](#-environment-variables) section below for the
+full reference.
+
+### 6️⃣ Apply Database Migrations
 
 ```bash
 python manage.py migrate
 ```
 
----
-
-### 6️⃣ Create an Administrator Account
+### 7️⃣ Create an Administrator Account
 
 ```bash
 python manage.py createsuperuser
 ```
 
----
-
-### 7️⃣ Run the Development Server
+### 8️⃣ Run the Development Server
 
 ```bash
 python manage.py runserver
 ```
 
-Open your browser:
+Then open:
 
+- **App:** <http://127.0.0.1:8000/>
+- **Admin panel:** <http://127.0.0.1:8000/admin/>
+
+### 9️⃣ Run the Tests
+
+```bash
+python manage.py test
 ```
-http://127.0.0.1:8000/
-```
-
-Administrator Panel:
-
-```
-http://127.0.0.1:8000/admin/
-```
-
-## 📦 Core Dependencies
-
-- Django 5.2
-- Pillow
-- Django Browser Reload
-- Django Environ
-- Bootstrap 5
-- SQLite3
-- Python-dotenv
-
-## 📦 Project Modules
-
-### 👤 Account Management
-
-The Account Management module provides secure authentication and user account functionality.
-
-**Features**
-
-- User Registration
-- Secure Login
-- Password Reset
-- Session Management
-- User Profile Management
 
 ---
 
-### 📄 Resume Management
+## 🔑 Environment Variables
 
-The Resume Management module allows users to securely upload and manage multiple resumes.
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `SECRET_KEY` | ✅ | Django secret key. Generate with `python -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"`. |
+| `DEBUG` | — | `True` for development, `False` in production. |
+| `ALLOWED_HOSTS` | — | Comma-separated hostnames, e.g. `127.0.0.1,localhost`. |
+| `CSRF_TRUSTED_ORIGINS` | — | HTTPS origins allowed to POST (production only), comma-separated. Empty in dev. |
+| `EMAIL_HOST_USER` | — | Gmail address for password-reset emails. App runs without it. |
+| `EMAIL_HOST_PASSWORD` | — | Gmail App Password for the address above. |
+| `EMAIL_HOST` | — | Defaults to `smtp.gmail.com`. |
+| `EMAIL_PORT` / `EMAIL_USE_TLS` | — | Defaults to `587` / `True`. |
+| `DATABASE_URL` | — | Optional. Postgres URL (e.g. on Render). Falls back to local SQLite. |
+| `CLOUDINARY_CLOUD_NAME` | — | Required on Render for media storage. |
+| `CLOUDINARY_API_KEY` | — | Required on Render for media storage. |
+| `CLOUDINARY_API_SECRET` | — | Required on Render for media storage. |
 
-**Features**
-
-- PDF Resume Upload
-- Resume Storage
-- Resume Preview
-- Resume History
-- Resume Management
-
----
-
-### 🤖 ATS Analysis Module
-
-The ATS Analysis module evaluates uploaded resumes against Applicant Tracking System (ATS) standards.
-
-**Features**
-
-- ATS Score Calculation
-- Resume Quality Evaluation
-- Missing Keyword Detection
-- Resume Strength Analysis
-- Improvement Suggestions
-- Resume Insights
+> 💡 For `EMAIL_HOST_PASSWORD`, use a [Gmail App Password](https://support.google.com/accounts/answer/185833) (not your normal account password) when 2-Step Verification is enabled.
 
 ---
 
-### 💼 Job Matching Module
+## 🚀 Usage
 
-The Job Matching module compares resumes with job descriptions to improve hiring compatibility.
+1. **Create an account** and log in.
+2. **Upload a resume** — give it a title, drop your PDF, and optionally paste a
+   target **job description**.
+3. **Review the analysis** — the ATS score ring, the per-category breakdown,
+   strengths, improvement areas, and (when a job description was provided) the
+   job-match percentage with matching / missing / extra skills.
+4. **Act on the feedback** — recommendations are prioritized and specific
+   (e.g. *"Add a professional summary of 40–120 words"* or *"Quantify 2–3
+   achievements with numbers, percentages, or dollar figures"*).
+5. **Revisit any time** — every analysis is cached in `resume_json`; reloading
+   an existing resume re-renders instantly without re-parsing the PDF.
 
-**Features**
+### Understanding the grade bands
 
-- Job Description Upload
-- Resume vs Job Comparison
-- Match Percentage
-- Keyword Matching
-- ATS Compatibility Analysis
-- Resume Optimization Guidance
+| ATS Score | Grade | Meaning |
+|-----------|-------|---------|
+| 90–100 | 🏆 **Excellent** | Highly competitive resume |
+| 75–89 | ✅ **Good** | Solid resume, minor improvements |
+| 60–74 | ⚠️ **Moderate** | Some areas need attention |
+| 40–59 | 🔴 **Weak** | Significant gaps in ATS fundamentals |
+| < 40 | ❌ **Poor** | Likely filtered out by ATS |
 
 ---
 
-### 📊 Dashboard Module
+## 🤖 ATS Engine
 
-Provides users with a centralized dashboard to manage resumes and view analysis results.
+`resume/ats_engine.py` evaluates **content, not keyword presence** — a resume
+that merely contains the words "experience" or "education" earns nothing.
+The rubric sums to **100 points** across 10 weighted categories:
 
-**Features**
+| Category | Weight | What earns points |
+|---|---|---|
+| Contact & Links | 5 | email, phone, LinkedIn, GitHub/portfolio — **partial credit per item** |
+| Sections & Completeness | 10 | which standard sections are present, weighted |
+| Professional Summary | 5 | present + 40–120 words + quality signals |
+| Skills Relevance | 25 | canonical count (log-scaled), tech-vs-soft weighting, synonym-aware; blended with JD relevance when a JD is given |
+| Experience Quality | 20 | section + quantified years + action verbs + quantified achievements + titles/companies detected |
+| Education | 10 | section + degree level + field of study |
+| Projects & Certifications | 10 | projects with tech used + recognized certifications |
+| Action Verbs & Language | 5 | strong-action-verb ratio in experience/project lines |
+| Keyword Density & Context | 5 | **balanced** density; repetition ratio `(mentions − unique) / unique` — stuffing is penalized |
+| Formatting & Structure | 5 | section headers, bullets, consistent dates, 250–1000 words |
+| **Total** | **100** | |
 
-- Dashboard Overview
-- Resume Statistics
-- Recent Analyses
-- Resume History
-- User Activity Tracking
+**Calibration (verified by tests):** an empty/garbage resume scores **< 25**; a
+keyword-dump scores **~8** (previously ~72 — it is now penalized for stuffing);
+a genuine strong resume scores **80+**.
 
-## 🚀 Future Enhancements
+---
 
-The following improvements are planned for future releases:
+## 💼 Job Matching Engine
 
-- 🤖 AI-Powered Resume Suggestions
-- 📑 AI Resume Generator
-- 🎯 Advanced ATS Optimization
-- 📊 Resume Analytics Dashboard
-- 📄 OCR Support for Scanned Resumes
-- 🌐 Multi-Language Resume Analysis
-- 💬 AI Career Assistant
-- 🎤 AI Mock Interview Preparation
-- 🐳 Docker Deployment
-- ☁️ Cloud Storage Integration
-- 📱 Progressive Web Application (PWA)
-- 🔗 LinkedIn Profile Import
+`resume/job_matcher.py` produces a **weighted composite** rather than a raw
+set-ratio — so the score is **stable regardless of job-description length**.
+The job description is parsed into required/preferred skills, years,
+degrees, certifications, and a role title; the resume's canonical skills and
+extracted entities are compared across six dimensions:
+
+| Dimension | Weight | Evaluates |
+|---|---|---|
+| Skills | 45 | canonical overlap — **required skills weighted over preferred** |
+| Experience | 20 | JD-required years vs. resume years |
+| Education | 10 | JD degree requirement vs. highest resume degree |
+| Certifications | 5 | JD-listed certs vs. resume certs |
+| Title | 5 | JD role vs. resume job titles (lemmatized token similarity) |
+| Domain | 15 | responsibility/industry keyword coverage |
+| **Total** | **100** | |
+
+**Canonicalization happens before any comparison.** An alias graph collapses
+equivalent spellings first, so:
+
+```
+JS      ≡ JavaScript        React.js ≡ React
+NodeJS  ≡ Node.js           Python3  ≡ Python
+ML      ≡ Machine Learning  AI       ≡ Artificial Intelligence
+C++     ≡ cpp               K8s      ≡ Kubernetes
+AWS S3  ≡ S3                ...
+```
+
+The result surfaces **missing required skills**, **missing experience** (e.g.
+*"JD asks for 5+ yrs of Django; resume shows ~2"*), and prioritized suggestions.
+
+---
+
+## 🔬 Resume Parsing Pipeline
+
+`resume/text_extractor.py` → `resume/analyzer.py` → **`ResumeDocument`**.
+
+| Stage | Module | Responsibility |
+|---|---|---|
+| Extract | `text_extractor.py` | PDF → text via pdfplumber; sets a **scanned-PDF flag** when no text layer exists |
+| Segment | `nlp/sections.py` | Split the text into labeled sections (summary, skills, experience, education, projects, certifications, languages, awards, …) |
+| Canonicalize | `nlp/aliases.py` + `skills.py` | Resolve aliases (`JS` → `JavaScript`) and assign skill categories **before any comparison** |
+| Extract entities | `nlp/entities.py` | Degrees, certifications, job titles, companies, and **years of experience** |
+| Measure quality | `nlp/features.py` | Action verbs, bullet counts, quantified achievements, date-range consistency |
+| Normalize | `nlp/normalize.py` | Tokenization, contact redaction, spaCy lemmatization with a **plain-token fallback** |
+| Orchestrate | `analyzer.py` | Assemble every signal into one `ResumeDocument` consumed by ATS + job match |
+
+The spaCy model is **lazy-loaded and cached** per process; if the model is
+absent, the pipeline degrades gracefully to plain tokenization instead of
+crashing.
+
+---
+
+## 🔒 Security Features
+
+| Layer | What's implemented |
+|---|---|
+| **Auth** | Django built-in authentication; every resume view requires login (`@login_required`) |
+| **Passwords** | Django's hardened validators: min length 8, similarity check, common & numeric-password rejection |
+| **CSRF** | CSRF middleware on all POST routes, with `CSRF_TRUSTED_ORIGINS` support for HTTPS hosts |
+| **XSS** | Django template auto-escaping everywhere |
+| **Clickjacking** | `XFrameOptionsMiddleware` (deny framing) |
+| **Headers** | `SecurityMiddleware` in the middleware chain |
+| **Secrets** | All credentials live in `.env` (gitignored) via python-decouple; a template ships as `.env.example` |
+| **File uploads** | PDF uploads restricted via `accept=".pdf"`; job images to `.png/.jpg/.jpeg` |
+| **Privacy** | `nlp/normalize.py` **redacts emails, URLs, and phone numbers** into placeholders before analysis |
+| **Storage-safe deletion** | Files removed via the storage API (works identically for local disk and Cloudinary) |
+
+---
+
+## ⚡ Performance Optimizations
+
+| Optimization | What it does |
+|---|---|
+| **Single-pass extraction** | The PDF is parsed **once** into a `ResumeDocument`; ATS scoring and job matching share the same object — no re-scanning |
+| **`resume_json` cache** | The full analysis payload is stored on `ResumeAnalysis`; the cache key is `sha1(pdf bytes + job description)`. Reloading an analysis short-circuits with **no re-parse, no re-score** |
+| **Lazy spaCy** | The model loads once per process and is reused across requests; NER is disabled for the lemmatization pass |
+| **Compiled regexes** | Pattern objects are compiled once at module load, not per call |
+| **Optimized dashboard** | `select_related("analysis")` + a single `aggregate()` — ≤ 6 queries (verified by test) |
+| **Persistent connections** | `conn_max_age=600` for database connections |
+
+---
+
+## 📖 Backend Documentation
+
+For a deep dive into the analysis pipeline — resume parsing, canonical skill
+matching, the weighted ATS rubric, the job-match composite, the service layer,
+and the `resume_json` cache — see
+**[docs/BACKEND_ARCHITECTURE.md](docs/BACKEND_ARCHITECTURE.md)**.
+
+---
+
+## 🗺️ Roadmap
+
+- 🤖 AI-powered resume suggestions & generation
+- 🎯 Advanced ATS optimization & keyword targeting
+- 📄 OCR support for scanned resumes
+- 🌐 Multi-language resume analysis
+- 💬 AI career assistant & mock interview prep
+- 🐳 Docker deployment & ☁️ cloud storage options
+- 📱 Progressive Web App (PWA) support
+- 🔗 LinkedIn profile import
+
+---
+
+## 🚀 Deployment (Render)
+
+The project is production-ready for [Render](https://render.com):
+
+1. Create a **Web Service** pointed at your GitHub repo.
+2. **Build command:** `pip install -r requirements.txt && python manage.py migrate && python manage.py collectstatic --noinput`
+3. **Start command:** `gunicorn ResumeAI.wsgi`
+4. **Environment:** set `SECRET_KEY`, `DEBUG=False`, `ALLOWED_HOSTS`, `DATABASE_URL` (Postgres), `EMAIL_*`, and the `CLOUDINARY_*` keys. Set the `RENDER` environment variable to `True` to activate Cloudinary media storage.
+
+> ⚠️ The custom 404/500 error pages render automatically in production (Django uses them when `DEBUG=False`).
+
+---
 
 ## 📄 License
 
-This project is licensed under the MIT License.
+This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) file for details.
 
-See the **LICENSE** file for more information.
+---
 
 ## 👨‍💻 Author
 
@@ -463,12 +554,10 @@ Passionate about building intelligent web applications, scalable backend systems
 
 </div>
 
+---
+
 ## ⭐ Support
 
-If you found this project helpful, please consider giving it a ⭐ on GitHub.
+If you found this project helpful, please consider giving it a ⭐ on GitHub. Your support motivates continued development of production-quality, open-source software.
 
-
-
-If you have suggestions, feature requests, or would like to collaborate, feel free to connect with me on GitHub or LinkedIn.
-
-
+For suggestions, feature requests, or collaboration, feel free to connect on [GitHub](https://github.com/Aby020) or [LinkedIn](https://linkedin.com/in/abithomas-dev).

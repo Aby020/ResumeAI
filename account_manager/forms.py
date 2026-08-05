@@ -14,7 +14,7 @@ class RegisterForm(forms.ModelForm):
     password = forms.CharField(
         widget=forms.PasswordInput(
             attrs={
-                "class": "form-control bg-dark text-white border-secondary pe-5",
+                "class": "form-control pe-5",
                 "placeholder": "Password",
             }
         )
@@ -23,7 +23,7 @@ class RegisterForm(forms.ModelForm):
     confirm_password = forms.CharField(
         widget=forms.PasswordInput(
             attrs={
-                "class": "form-control bg-dark text-white border-secondary pe-5",
+                "class": "form-control pe-5",
                 "placeholder": "Confirm Password",
             }
         )
@@ -38,19 +38,19 @@ class RegisterForm(forms.ModelForm):
         widgets = {
             "first_name": forms.TextInput(
                 attrs={
-                    "class": "form-control bg-dark text-white border-secondary",
+                    "class": "form-control",
                     "placeholder": "Full Name",
                 }
             ),
             "username": forms.TextInput(
                 attrs={
-                    "class": "form-control bg-dark text-white border-secondary",
+                    "class": "form-control",
                     "placeholder": "Username",
                 }
             ),
             "email": forms.EmailInput(
                 attrs={
-                    "class": "form-control bg-dark text-white border-secondary",
+                    "class": "form-control",
                     "placeholder": "Email",
                 }
             ),
@@ -88,8 +88,6 @@ class RegisterForm(forms.ModelForm):
 
         if email:
             email = email.strip().lower()
-
-           
 
             if User.objects.filter(email__iexact=email).exists():
                 raise forms.ValidationError(

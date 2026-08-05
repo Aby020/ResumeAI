@@ -17,6 +17,14 @@
 
     <meta name="description" content="ResumeAI - AI Powered Resume Analysis Platform">
 
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="{% static 'images/favicon/favicon.ico' %}">
+
+    <!-- Inter font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
     <!-- Bootstrap -->
     <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
 
@@ -35,6 +43,8 @@
 
 <div class="admin-shell">
 
+    <div class="sidebar-backdrop" data-sidebar-close></div>
+
     {% include "components/sidebar.html" %}
 
     <div class="admin-main">
@@ -44,6 +54,9 @@
         <main class="dashboard-content">
 
             <div class="container-fluid px-3 px-lg-4 py-4">
+
+                {% block page_heading %}
+                {% endblock %}
 
                 <!-- Success & Error Messages -->
                 {% if messages %}

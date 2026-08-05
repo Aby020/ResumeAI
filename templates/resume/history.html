@@ -1,218 +1,186 @@
 {% extends "base.html" %}
 
-{% block title %}
-My Resumes
+{% block title %}Resume History | ResumeAI{% endblock %}
+
+{% block page_heading %}
+<div class="page-heading">
+    <div class="page-heading-copy">
+        <span class="page-icon"><i class="bi bi-folder2-open" aria-hidden="true"></i></span>
+        <div>
+            <p class="eyebrow mb-1">ResumeAI</p>
+            <h1 class="h3 mb-1">Resume History</h1>
+            <p class="text-muted mb-0">Manage all your uploaded resumes and analysis results.</p>
+        </div>
+    </div>
+    <div class="heading-actions">
+        <a href="{% url 'upload_resume' %}" class="btn btn-primary btn-sm">
+            <i class="bi bi-upload"></i>
+            Upload Resume
+        </a>
+    </div>
+</div>
 {% endblock %}
 
 {% block content %}
 
-<div class="page-heading mb-4 d-flex justify-content-between align-items-center">
+{% if resumes %}
 
-    <div>
+<div class="panel">
+    <div class="table-responsive">
+        <table class="table align-middle mb-0">
+            <thead>
+                <tr>
+                    <th scope="col">Resume</th>
+                    <th scope="col" class="text-center">ATS Score</th>
+                    <th scope="col" class="text-center">Job Match</th>
+                    <th scope="col">Uploaded</th>
+                    <th scope="col" class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
 
-        <h2 class="fw-bold mb-1">
+                {% for resume in resumes %}
+                <tr>
+                    <td>
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-file-earmark-pdf-fill fs-4 text-danger" aria-hidden="true"></i>
+                            <div>
+                                <p class="fw-semibold mb-0">{{ resume.title }}</p>
+                                <small class="text-muted">{{ resume.file.name|cut:"resumes/" }}</small>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="text-center">
+                        {% if resume.analysis %}
+                            {% if resume.analysis.ats_score >= 90 %}
+                                <span class="badge score-badge score-excellent">Excellent {{ resume.analysis.ats_score }}%</span>
+                            {% elif resume.analysis.ats_score >= 75 %}
+                                <span class="badge score-badge score-good">Good {{ resume.analysis.ats_score }}%</span>
+                            {% elif resume.analysis.ats_score >= 60 %}
+                                <span class="badge score-badge score-average">Average {{ resume.analysis.ats_score }}%</span>
+                            {% else %}
+                                <span class="badge score-badge score-weak">Weak {{ resume.analysis.ats_score }}%</span>
+                            {% endif %}
+                        {% else %}
+                            <span class="badge bg-secondary">--</span>
+                        {% endif %}
+                    </td>
+                    <td class="text-center">
+                        {% if resume.analysis and resume.analysis.job_match_score %}
+                            {% if resume.analysis.job_match_score >= 80 %}
+                                <span class="badge score-badge score-excellent">{{ resume.analysis.job_match_score }}%</span>
+                            {% elif resume.analysis.job_match_score >= 60 %}
+                                <span class="badge score-badge score-average">{{ resume.analysis.job_match_score }}%</span>
+                            {% else %}
+                                <span class="badge score-badge score-weak">{{ resume.analysis.job_match_score }}%</span>
+                            {% endif %}
+                        {% else %}
+                            <span class="badge bg-secondary">--</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <span class="text-muted">{{ resume.uploaded_at|date:"d M Y" }}</span>
+                        <br>
+                        <small class="text-muted">{{ resume.uploaded_at|timesince }} ago</small>
+                    </td>
+                    <td class="text-end">
+                        <div class="d-flex justify-content-end gap-1">
+                            <a href="{% url 'analyze_resume' resume.id %}"
+                               class="btn btn-outline-primary btn-sm"
+                               title="View Analysis"
+                               aria-label="View analysis for {{ resume.title }}">
+                                <i class="bi bi-graph-up" aria-hidden="true"></i>
+                                <span class="d-none d-md-inline ms-1">View</span>
+                            </a>
+                            <a href="{{ resume.file.url }}"
+                               class="btn btn-outline-success btn-sm"
+                               target="_blank"
+                               title="Download PDF"
+                               aria-label="Download {{ resume.title }}">
+                                <i class="bi bi-download" aria-hidden="true"></i>
+                                <span class="d-none d-md-inline ms-1">Download</span>
+                            </a>
+                            <button type="button"
+                                    class="btn btn-outline-danger btn-sm"
+                                    title="Delete Resume"
+                                    aria-label="Delete {{ resume.title }}"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#deleteModal"
+                                    data-resume-id="{{ resume.id }}"
+                                    data-resume-title="{{ resume.title }}">
+                                <i class="bi bi-trash" aria-hidden="true"></i>
+                                <span class="d-none d-md-inline ms-1">Delete</span>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
 
-            <i class="bi bi-folder2-open"></i>
-
-            My Resumes
-
-        </h2>
-
-        <p class="text-muted mb-0">
-
-            Manage all your uploaded resumes.
-
-        </p>
-
+            </tbody>
+        </table>
     </div>
+</div>
 
+{# ── Delete Confirmation Modal ── #}
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+                <h5 class="modal-title" id="deleteModalLabel">Delete Resume</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete <strong id="deleteResumeName"></strong>?</p>
+                <p class="text-muted small mb-0">This action cannot be undone. The PDF file and all analysis data will be permanently removed.</p>
+            </div>
+            <div class="modal-footer border-0">
+                <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
+                <a href="#" id="deleteConfirmBtn" class="btn btn-danger btn-sm">
+                    <i class="bi bi-trash me-1" aria-hidden="true"></i>Delete
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% else %}
+
+{# ── Empty State ── #}
+<div class="text-center py-5">
+    <div class="empty-state-icon mx-auto mb-4">
+        <i class="bi bi-folder-x" aria-hidden="true"></i>
+    </div>
+    <h4 class="fw-bold">No resumes uploaded</h4>
+    <p class="text-muted mb-4" style="max-width:360px;margin-left:auto;margin-right:auto;">
+        Upload your first resume to get an ATS score, job match insights, and skill analysis.
+    </p>
     <a href="{% url 'upload_resume' %}" class="btn btn-primary">
-
-        <i class="bi bi-cloud-upload"></i>
-
-        Upload Resume
-
+        <i class="bi bi-upload me-1" aria-hidden="true"></i>Upload Your First Resume
     </a>
-
 </div>
 
-<div class="card shadow-sm border-0">
-
-    <div class="card-body">
-
-        {% if resumes %}
-
-        <div class="table-responsive">
-
-            <table class="table table-hover align-middle">
-
-                <thead class="table-light">
-
-                    <tr>
-
-                        <th>Resume</th>
-
-                        <th class="text-center">ATS Score</th>
-
-                        <th class="text-center">Job Match</th>
-
-                        <th>Uploaded</th>
-
-                        <th class="text-center">Actions</th>
-
-                    </tr>
-
-                </thead>
-
-                <tbody>
-
-                    {% for resume in resumes %}
-
-                    <tr>
-
-                        <td>
-
-                            <div class="d-flex align-items-center">
-
-                                <i class="bi bi-file-earmark-pdf-fill text-danger fs-3 me-3"></i>
-
-                                <div>
-
-                                    <h6 class="mb-1 fw-semibold">
-
-                                        {{ resume.title }}
-
-                                    </h6>
-
-                                    <small class="text-muted">
-
-                                        {{ resume.file.name }}
-
-                                    </small>
-
-                                </div>
-
-                            </div>
-
-                        </td>
-                        <td class="text-center">
-
-                            {% if resume.analysis %}
-
-                            <span class="badge bg-primary">
-
-                                {{ resume.analysis.ats_score }}%
-
-                            </span>
-
-                            {% else %}
-
-                            <span class="badge bg-secondary">
-
-                                --
-
-                            </span>
-
-                            {% endif %}
-
-                        </td>
-                        <td class="text-center">
-
-                            {% if resume.analysis.job_match_score %}
-
-                            <span class="badge bg-success">
-
-                                {{ resume.analysis.job_match_score }}%
-
-                            </span>
-
-                            {% else %}
-
-                            <span class="badge bg-secondary">
-
-                                --
-
-                            </span>
-
-                            {% endif %}
-
-                        </td>
-
-                        <td>
-
-                            {{ resume.uploaded_at|date:"d M Y - h:i A" }}
-
-                        </td>
-
-                        <td class="text-center">
-
-                            <div class="d-flex justify-content-center gap-2">
-
-                                <a href="{% url 'analyze_resume' resume.id %}" class="btn btn-primary btn-sm">
-
-                                    <i class="bi bi-search"></i>
-
-                                </a>
-
-                                <a href="{{ resume.file.url }}" class="btn btn-success btn-sm" target="_blank">
-
-                                    <i class="bi bi-download"></i>
-
-                                </a>
-
-                                <a href="{% url 'delete_resume' resume.id %}" class="btn btn-danger btn-sm"
-                                    onclick="return confirm('Are you sure you want to delete this resume?');">
-
-                                    <i class="bi bi-trash"></i>
-
-                                </a>
-
-                            </div>
-
-                        </td>
-
-                    </tr>
-
-                    {% endfor %}
-
-                </tbody>
-
-            </table>
-
-        </div>
-
-        {% else %}
-
-        <div class="text-center py-5">
-
-            <i class="bi bi-folder-x display-1 text-secondary"></i>
-
-            <h3 class="mt-4">
-
-                No resumes uploaded
-
-            </h3>
-
-            <p class="text-muted">
-
-                Upload your first resume to begin ATS analysis.
-
-            </p>
-
-            <a href="{% url 'upload_resume' %}" class="btn btn-primary">
-
-                <i class="bi bi-cloud-upload"></i>
-
-                Upload Resume
-
-            </a>
-
-        </div>
-
-        {% endif %}
-
-    </div>
-
-</div>
-
+{% endif %}
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function () {
+    var modal = document.getElementById('deleteModal');
+    if (!modal) return;
+
+    modal.addEventListener('show.bs.modal', function (event) {
+        var button = event.relatedTarget;
+        if (!button) return;
+        var resumeId = button.getAttribute('data-resume-id');
+        var resumeTitle = button.getAttribute('data-resume-title');
+
+        var nameEl = document.getElementById('deleteResumeName');
+        if (nameEl) nameEl.textContent = resumeTitle;
+
+        var confirmBtn = document.getElementById('deleteConfirmBtn');
+        if (confirmBtn) confirmBtn.href = '/resume/delete/' + resumeId + '/';
+    });
+})();
+</script>
 {% endblock %}

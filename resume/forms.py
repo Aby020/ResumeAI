@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import Resume, ResumeAnalysis
+from .models import Resume
 
 
 class ResumeForm(forms.ModelForm):

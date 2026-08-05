@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
-from decouple import config
+from decouple import config, Csv
 import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -32,6 +32,18 @@ ALLOWED_HOSTS = config(
     default="127.0.0.1,localhost",
 ).split(",")
 
+# Origins allowed to POST CSRF-authenticated requests (needed on HTTPS
+# hosts behind a proxy, e.g. Render). Comma-separated in .env, empty in dev.
+CSRF_TRUSTED_ORIGINS = [
+    origin
+    for origin in config(
+        "CSRF_TRUSTED_ORIGINS",
+        default="",
+        cast=Csv(),
+    )
+    if origin
+]
+
 
 # Application definition
 
@@ -51,8 +63,6 @@ INSTALLED_APPS = [
     "account_manager",
     "dashboard",
     "resume",
-    "analytics",
-    "jobs",
     "core",
 ]
 
@@ -160,21 +170,22 @@ LOGIN_REDIRECT_URL = "dashboard"
 
 LOGOUT_REDIRECT_URL = "home"
 
-# Email Configuration
+# Email Configuration (SMTP credentials live in .env)
+# A blank EMAIL_HOST_USER disables outbound mail but keeps the app running.
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 
-EMAIL_HOST = "smtp.gmail.com"
+EMAIL_HOST = config("EMAIL_HOST", default="smtp.gmail.com")
 
-EMAIL_PORT = 587
+EMAIL_PORT = config("EMAIL_PORT", default=587, cast=int)
 
-EMAIL_USE_TLS = True
+EMAIL_USE_TLS = config("EMAIL_USE_TLS", default=True, cast=bool)
 
-EMAIL_HOST_USER = config("EMAIL_HOST_USER")
+EMAIL_HOST_USER = config("EMAIL_HOST_USER", default="")
 
-EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD")
+EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD", default="")
 
-DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER or "noreply@resumeai.app"
 
 import os
 import cloudinary

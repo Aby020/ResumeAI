@@ -1,11 +1,13 @@
-<aside class="admin-sidebar" id="adminSidebar">
+{% load static %}
+
+<aside class="admin-sidebar" id="adminSidebar" aria-label="Main navigation">
 
     <div class="sidebar-header">
 
-        <a class="brand-mark" href="/">
+        <a class="brand-mark" href="{% url 'dashboard' %}" aria-label="ResumeAI dashboard">
 
             <span class="brand-icon">
-                <i class="bi bi-file-earmark-person-fill"></i>
+                <i class="bi bi-file-earmark-person-fill" aria-hidden="true"></i>
             </span>
 
             <span class="brand-copy">
@@ -24,89 +26,66 @@
 
     </div>
 
-
     <nav class="sidebar-nav">
 
-        <a class="nav-link" href="{% url 'dashboard' %}">
+        {% with current=request.resolver_match.url_name %}
 
-            <span class="nav-icon">
-                <i class="bi bi-speedometer2"></i>
-            </span>
+        <a class="nav-link{% if current == 'dashboard' %} active{% endif %}"
+           href="{% url 'dashboard' %}"
+           {% if current == 'dashboard' %}aria-current="page"{% endif %}>
 
-            <span class="nav-text">
-                Dashboard
-            </span>
-
-        </a>
-
-        <a class="nav-link" href="{% url 'upload_resume' %}">
-
-            <span class="nav-icon">
-                <i class="bi bi-cloud-upload"></i>
-            </span>
-
-            <span class="nav-text">
-                Upload Resume
-            </span>
+            <span class="nav-icon"><i class="bi bi-speedometer2" aria-hidden="true"></i></span>
+            <span class="nav-text">Dashboard</span>
 
         </a>
 
-        <a class="nav-link" href="{% url 'resume_history' %}">
+        <a class="nav-link{% if current == 'upload_resume' %} active{% endif %}"
+           href="{% url 'upload_resume' %}"
+           {% if current == 'upload_resume' %}aria-current="page"{% endif %}>
 
-            <span class="nav-icon">
-                <i class="bi bi-folder2-open"></i>
-            </span>
-
-            <span class="nav-text">
-                Resume History
-            </span>
+            <span class="nav-icon"><i class="bi bi-cloud-upload" aria-hidden="true"></i></span>
+            <span class="nav-text">Upload Resume</span>
 
         </a>
 
-        <a class="nav-link" href="{% url 'profile' %}">
+        <a class="nav-link{% if current == 'resume_history' %} active{% endif %}"
+           href="{% url 'resume_history' %}"
+           {% if current == 'resume_history' %}aria-current="page"{% endif %}>
 
-            <span class="nav-icon">
-                <i class="bi bi-person-circle"></i>
-            </span>
+            <span class="nav-icon"><i class="bi bi-folder2-open" aria-hidden="true"></i></span>
+            <span class="nav-text">Resume History</span>
 
-            <span class="nav-text">
-                Profile
-            </span>
+        </a>
+
+        <a class="nav-link{% if current == 'profile' %} active{% endif %}"
+           href="{% url 'profile' %}"
+           {% if current == 'profile' %}aria-current="page"{% endif %}>
+
+            <span class="nav-icon"><i class="bi bi-person-circle" aria-hidden="true"></i></span>
+            <span class="nav-text">Profile</span>
 
         </a>
 
         <a class="nav-link" href="{% url 'logout' %}">
 
-            <span class="nav-icon">
-                <i class="bi bi-box-arrow-right"></i>
-            </span>
-
-            <span class="nav-text">
-                Logout
-            </span>
+            <span class="nav-icon"><i class="bi bi-box-arrow-right" aria-hidden="true"></i></span>
+            <span class="nav-text">Logout</span>
 
         </a>
+
+        {% endwith %}
 
     </nav>
 
     <div class="sidebar-user">
 
-        <div class="text-center">
+        <div class="sidebar-avatar">
+            {{ user.first_name|default:user.username|truncatechars:1 }}
+        </div>
 
-            <i class="bi bi-person-circle display-3 text-primary"></i>
-
-            <h6 class="mt-3 mb-1">
-
-                {{ user.first_name|default:user.username }}
-
-            </h6>
-
-            <small class="text-muted">
-
-                ResumeAI Member
-
-            </small>
-
+        <div class="sidebar-user-info">
+            <strong>{{ user.first_name|default:user.username }}</strong>
+            <small class="text-muted">{{ user.email }}</small>
         </div>
 
     </div>
@@ -116,9 +95,7 @@
         <span class="status-dot"></span>
 
         <span class="sidebar-footer-text">
-
-            Connected
-
+            ResumeAI Online
         </span>
 
     </div>

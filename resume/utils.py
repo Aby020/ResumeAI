@@ -1,37 +1,31 @@
 import re
 
-from .skills import SKILLS
+from .nlp.skill_extractor import canonical_skills
+from .skills import COMMON_SKILLS
 from .text_extractor import extract_text
 
 
 def detect_skills(text):
     """
     Detect technical skills from resume text.
+
     Returns:
-        found_skills,
-        missing_skills
+        found_skills: canonical skill names found in the text
+        missing_skills: a short list of common in-demand skills NOT found
+                        (capped so the suggestion list stays readable)
     """
 
-    text = text.lower()
+    found = canonical_skills(text)
 
-    found = []
-    missing = []
+    found_set = set(found)
 
-    for skill in SKILLS:
-
-        pattern = r"\b" + re.escape(skill.lower()) + r"\b"
-
-        if re.search(pattern, text):
-
-            found.append(skill.title())
-
-        else:
-
-            missing.append(skill.title())
+    missing = [
+        skill for skill in COMMON_SKILLS if skill not in found_set
+    ]
 
     return (
-        sorted(set(found)),
-        sorted(set(missing))
+        found,
+        missing[:12]
     )
 
 

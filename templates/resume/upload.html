@@ -1,116 +1,120 @@
 {% extends "base.html" %}
 
-{% block title %}Upload Resume{% endblock %}
+{% block title %}Upload Resume | ResumeAI{% endblock %}
+
+{% block page_heading %}
+<div class="page-heading">
+    <div class="page-heading-copy">
+        <span class="page-icon"><i class="bi bi-cloud-arrow-up" aria-hidden="true"></i></span>
+        <div>
+            <p class="eyebrow mb-1">ResumeAI</p>
+            <h1 class="h3 mb-1">Upload Resume</h1>
+            <p class="text-muted mb-0">
+                Upload your resume for ATS analysis. Optionally add a job description for a match score.
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}
 
 {% block content %}
 
-<div class="row justify-content-center">
+<form method="POST" enctype="multipart/form-data" id="upload-form">
 
-    <div class="col-xl-9">
+    {% csrf_token %}
 
-        <div class="text-center mb-5">
+    <div class="row g-4">
 
-            <i class="bi bi-cloud-arrow-up display-1 text-primary"></i>
+        {# ── Left Column: Resume ── #}
+        <div class="col-12 col-lg-7">
 
-            <h2 class="fw-bold mt-3">Upload Resume</h2>
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="bi bi-file-earmark-person me-2" aria-hidden="true"></i>Resume
+                    </h5>
+                </div>
+                <div class="card-body">
 
-            <p class="text-muted">
-                Upload your resume for ATS analysis. Optionally paste a job description
-                or upload a job screenshot to receive a Job Match score.
-            </p>
+                    <div class="mb-3">
+                        <label for="{{ form.title.id_for_label }}" class="form-label fw-semibold">Resume Title</label>
+                        {{ form.title }}
+                    </div>
+
+                    <div class="mb-0">
+                        <label for="{{ form.file.id_for_label }}" class="form-label fw-semibold">Resume File (PDF)</label>
+
+                        <div class="drop-zone" data-drop-zone data-drop-input="#{{ form.file.id_for_label }}">
+                            <input type="file"
+                                   name="{{ form.file.html_name }}"
+                                   id="{{ form.file.id_for_label }}"
+                                   accept=".pdf"
+                                   class="drop-zone-input visually-hidden">
+                            <div class="drop-zone-content">
+                                <i class="bi bi-cloud-arrow-up drop-zone-icon" aria-hidden="true"></i>
+                                <p class="drop-zone-text mb-1">Drag & drop your PDF here</p>
+                                <p class="drop-zone-subtext mb-2">or click to browse</p>
+                                <span class="drop-zone-filename" data-drop-filename></span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
 
         </div>
 
-        <div class="card border-0 shadow rounded-4">
+        {# ── Right Column: Job Description ── #}
+        <div class="col-12 col-lg-5">
 
-            <div class="card-body p-5">
-
-                <form method="POST"
-                      enctype="multipart/form-data">
-
-                    {% csrf_token %}
-
-                    <div class="mb-4">
-
-                        <label class="form-label fw-semibold">
-                            Resume Title
-                        </label>
-
-                        {{ form.title }}
-
-                    </div>
-
-                    <div class="mb-4">
-
-                        <label class="form-label fw-semibold">
-                            Resume (PDF)
-                        </label>
-
-                        {{ form.file }}
-
-                    </div>
-
-                    <hr class="my-5">
-
-                    <h4 class="mb-3">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="bi bi-briefcase me-2" aria-hidden="true"></i>
                         Job Description
-                        <small class="text-muted">(Optional)</small>
-                    </h4>
+                        <span class="badge bg-secondary ms-2" style="font-size:0.65rem;">Optional</span>
+                    </h5>
+                </div>
+                <div class="card-body">
 
-                    <div class="mb-4">
-
+                    <div class="mb-0">
                         {{ form.job_description }}
-
-                        <small class="text-muted">
-                            Paste the job description if available.
-                        </small>
-
-                    </div>
-                    {% comment %}
-
-                    <div class="text-center my-4">
-
-                        <span class="badge bg-secondary px-4 py-2">
-                            OR
-                        </span>
-
+                        <div class="form-text">
+                            Paste the job posting to get a job match score and tailored skill insights.
+                        </div>
                     </div>
 
-                    <div class="mb-4">
-
-                        <label class="form-label fw-semibold">
-                            Upload Job Screenshot
-                        </label>
-
-                        {{ form.job_image }}
-
-                        <small class="text-muted d-block mt-2">
-                            Supported: JPG, JPEG, PNG
-                        </small>
-
-                    </div>
-                    {% endcomment %}
-
-                    <div class="d-grid mt-5">
-
-                        <button class="btn btn-primary btn-lg">
-
-                            <i class="bi bi-stars"></i>
-
-                            Analyze Resume
-
-                        </button>
-
-                    </div>
-
-                </form>
-
+                </div>
             </div>
 
         </div>
 
     </div>
 
-</div>
+    {# ── Submit ── #}
+    <div class="d-flex justify-content-center mt-4">
+        <button class="btn btn-primary btn-lg px-5" type="submit" id="upload-submit">
+            <i class="bi bi-stars me-1" aria-hidden="true"></i>
+            Analyze Resume
+        </button>
+    </div>
 
+</form>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function () {
+    var form = document.getElementById('upload-form');
+    if (!form) return;
+    form.addEventListener('submit', function () {
+        var btn = document.getElementById('upload-submit');
+        if (btn) {
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Analyzing...';
+        }
+    });
+})();
+</script>
 {% endblock %}
