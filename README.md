@@ -69,18 +69,15 @@ layer that owns the pipeline, and a caching layer that makes re-analysis free.
 | **🎨 UX** | Light/dark theme toggle, responsive design, accessibility, premium SaaS styling across every page |
 
 ---
+## 🎬 Landing Page Demo
 
-## 🎬 Demo
+<p align="center">
+  <img src="screenshots/home-demo.gif" alt="ResumeAI Landing Page Demo" width="90%">
+</p>
 
-Click play for a walkthrough of the landing page:
-
-<div align="center">
-
-<video src="screenshots/home-demo.gif" controls width="90%"></video>
-<br>
-<em>▶ Landing page demo — `screenshots/home-demo.mp4`</em>
-
-</div>
+<p align="center">
+  <em>✨ ResumeAI V2 landing page demonstration</em>
+</p>
 
 ---
 
