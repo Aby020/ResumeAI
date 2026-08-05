@@ -76,7 +76,7 @@ Click play for a walkthrough of the landing page:
 
 <div align="center">
 
-<video src="screenshots/home-demo.mp4" controls width="90%"></video>
+<video src="screenshots/home-demo.gif" controls width="90%"></video>
 <br>
 <em>▶ Landing page demo — `screenshots/home-demo.mp4`</em>
 
