@@ -129,11 +129,10 @@ areas, plus matching / missing / extra skills.
 ### 🤖 AI-Powered Resume Insights
 
 <p align="center">
-  <strong>AI-Powered Resume Insights</strong>
+  <img src="screenshots/ai_explanation.png" width="48%" alt="AI Explanation">
+  <img src="screenshots/ai_rewrite.png" width="48%" alt="AI Rewrite Suggestions">
   <br>
-  <code>[ AI WORKING SCREENSHOT WILL BE ADDED HERE ]</code>
-  <br>
-  <em>AI explanation of ATS scores and job-match gaps with grounded rewrite suggestions</em>
+  <em>AI explanation of ATS scores & job-match gaps (left) · Grounded rewrite suggestions for resume sections (right)</em>
 </p>
 
 ### 📊 Dashboard & History
