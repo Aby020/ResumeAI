@@ -64,8 +64,9 @@ layer that owns the pipeline, and a caching layer that makes re-analysis free.
 | **📄 Resumes** | PDF upload with drag & drop, persistent storage, history with **View / Download / Delete**, storage-safe deletion |
 | **🤖 ATS Analysis** | Weighted 100-point rubric across 10 categories, grade bands, per-category breakdown, strengths & improvement areas |
 | **💼 Job Matching** | Weighted composite (skills · experience · education · certifications · title · domain), matching/missing/extra skills, missing-experience detection |
+| **🧠 AI Insights** | OpenAI-powered explanations of ATS/job gaps, grounded rewrite suggestions for resume sections, result caching |
 | **🔍 NLP Intelligence** | spaCy lemmatization, canonical skill aliasing (`JS` ≡ `JavaScript`), section segmentation, degree/certification/title extraction |
-| **⚡ Performance** | Single-pass parsing, `resume_json` cache (no re-parse on reload), lazy-loaded spaCy, optimized dashboard queries |
+| **⚡ Performance** | Single-pass parsing, `resume_json` & AI-result caching, lazy-loaded spaCy, optimized dashboard queries |
 | **🎨 UX** | Light/dark theme toggle, responsive design, accessibility, premium SaaS styling across every page |
 
 ---
@@ -125,6 +126,16 @@ areas, plus matching / missing / extra skills.
   <em>Categorized feedback lists and skill-level match detail</em>
 </p>
 
+### 🤖 AI-Powered Resume Insights
+
+<p align="center">
+  <strong>AI-Powered Resume Insights</strong>
+  <br>
+  <code>[ AI WORKING SCREENSHOT WILL BE ADDED HERE ]</code>
+  <br>
+  <em>AI explanation of ATS scores and job-match gaps with grounded rewrite suggestions</em>
+</p>
+
 ### 📊 Dashboard & History
 
 <p align="center">
@@ -148,6 +159,7 @@ areas, plus matching / missing / extra skills.
 |----------|------------|
 | **Backend** | Python 3.12, Django 5.2 |
 | **Frontend** | HTML5, CSS3 (custom design system), Bootstrap 5, JavaScript |
+| **AI/OpenAI** | OpenAI API integration for analysis explanations and rewrite suggestions |
 | **Database** | SQLite (development) · PostgreSQL via `DATABASE_URL` (production) |
 | **PDF Parsing** | pdfplumber 0.11 — text extraction, scanned-PDF detection |
 | **NLP** | spaCy 3.8 + `en_core_web_sm` — lemmatization, NER, canonical skill matching (graceful fallback without the model) |
@@ -437,60 +449,6 @@ The result surfaces **missing required skills**, **missing experience** (e.g.
 ---
 
 ## 🤖 AI-Powered Resume Insights (New)
-
-ResumeAI now includes an **AI layer** that builds on the deterministic ATS and
-job-match engines to generate **grounded, actionable explanations and rewrites**.
-
-### AI Explanation
-
-- **Plain-language breakdown** of ATS scores and job-match gaps
-- **Prioritized items** (high / medium / low) tied to specific engine findings
-- **Executive summary** (2–3 sentences) of the resume's fit for the target role
-- Every finding is **grounded** — it must match a verbatim finding from the
-  deterministic ATS or job-match payload (no hallucinations)
-
-### AI Rewrite Suggestions
-
-- **Concrete, ready-to-use rewrites** for specific resume sections (Professional
-  Summary, Skills, Work Experience, etc.)
-- **Before/after view** with the original text quoted from the resume
-- Each rewrite targets a **specific engine finding** with a rationale
-- Grounding check: `target_finding` must exist in the engine payload; `original`
-  text must exist in the resume
-
-### Architecture
-
-| Component | Responsibility |
-|-----------|----------------|
-| `resume/ai/schemas.py` | Pydantic v2 models (`AIExplanation`, `AIRewrite`, `ExplanationItem`, `RewriteSuggestion`) with `extra='forbid'` |
-| `resume/ai/prompts.py` | Prompt builders that inject engine data + grounding instructions |
-| `resume/ai/client.py` | Thin OpenAI SDK wrapper (model, temperature, error wrapping) |
-| `resume/ai/service.py` | Orchestration: prompt building → API call → validation → grounding → caching |
-
-### Caching & Performance
-
-- **Cache key** derived from deterministic engine payloads (ATS score,
-  breakdown, missing skills, experience gaps) — same engine output = same cache
-- **7-day TTL** in Django cache framework
-- **Versioned cache** (bumped when prompts/schemas change)
-- Reloading an analysis with identical engine results is instant — no API call
-
-### Graceful Degradation
-
-| Scenario | Behavior |
-|----------|----------|
-| No `OPENAI_API_KEY` | AI sections hidden; deterministic recommendations shown |
-| Rate limit (429) / timeout / network error | Cached result served if available; otherwise AI sections hidden gracefully |
-| Invalid/ungrounded model response | Retried once with stricter reminder; if still invalid, falls back to deterministic output |
-| `DEBUG=True` + API failure | Mock grounded data returned (for UI verification without quota) |
-
-The AI layer **never** recalculates ATS scores, modifies job-match scores,
-replaces the analyzer, or re-parses the PDF. It only explains and rewrites
-using the existing deterministic engine outputs as ground truth.
-
----
-
-## 🤖 AI-Powered Resume Insights
 
 ResumeAI now includes an **AI layer** that builds on the deterministic ATS and
 job-match engines to generate **grounded, actionable explanations and rewrites**.
