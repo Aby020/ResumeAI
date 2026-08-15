@@ -16,6 +16,7 @@ from .services import (
     read_file_bytes,
     run_analysis_pipeline,
 )
+from .ai.service import get_ai_service
 
 logger = logging.getLogger(__name__)
 
@@ -106,6 +107,9 @@ def analyze_resume(request, resume_id):
     if pdf_bytes is None:
         if analysis.resume_json:
             context = context_from_payload(analysis.resume_json)
+            # Include cached AI results from the model
+            context["ai_explanation"] = analysis.ai_explanation
+            context["ai_rewrite"] = analysis.ai_rewrite
             return render(
                 request,
                 "resume/analysis.html",
@@ -130,6 +134,9 @@ def analyze_resume(request, resume_id):
 
     if meta.get("cache_key") == cache_key:
         context = context_from_payload(cached)
+        # Include cached AI results from the model
+        context["ai_explanation"] = analysis.ai_explanation
+        context["ai_rewrite"] = analysis.ai_rewrite
         return render(
             request,
             "resume/analysis.html",
@@ -160,6 +167,27 @@ def analyze_resume(request, resume_id):
     analysis.improvement_areas = ats["improvements"]
     analysis.resume_json = payload
     analysis.save()
+
+    # Call AI service for explanation and rewrite (async-style, but sync here)
+    ai_service = get_ai_service()
+    ai_explanation = None
+    ai_rewrite = None
+    if ai_service._enabled:
+        # Use cached or fresh results
+        ai_explanation = ai_service.explain(ats, job, payload["text"])
+        ai_rewrite = ai_service.rewrite(ats, job, payload["text"])
+
+        # Cache results on the analysis model for future renders
+        if ai_explanation:
+            analysis.ai_explanation = ai_explanation.model_dump(mode="json")
+        if ai_rewrite:
+            analysis.ai_rewrite = ai_rewrite.model_dump(mode="json")
+        if ai_explanation or ai_rewrite:
+            analysis.save(update_fields=["ai_explanation", "ai_rewrite"])
+
+    # Include AI results in context
+    context["ai_explanation"] = ai_explanation
+    context["ai_rewrite"] = ai_rewrite
 
     return render(
         request,

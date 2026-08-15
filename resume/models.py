@@ -84,6 +84,28 @@ class ResumeAnalysis(models.Model):
         blank=True
     )
 
+    # AI cache fields
+    ai_explanation = models.JSONField(
+        default=dict,
+        blank=True,
+        help_text="Cached AIExplanation response (JSON)"
+    )
+    ai_rewrite = models.JSONField(
+        default=dict,
+        blank=True,
+        help_text="Cached AIRewrite response (JSON)"
+    )
+    ai_prompt_version = models.PositiveIntegerField(
+        default=2,
+        help_text="Prompt version used for cached AI responses"
+    )
+    ai_model = models.CharField(
+        max_length=50,
+        blank=True,
+        default="gpt-4o-mini",
+        help_text="OpenAI model used for cached AI responses"
+    )
+
     analyzed_at = models.DateTimeField(
         auto_now=True
     )

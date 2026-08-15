@@ -187,6 +187,17 @@ EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD", default="")
 
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER or "noreply@resumeai.app"
 
+# AI / OpenAI Configuration (optional; blank disables AI features)
+# OPENAI_API_KEY lives in .env and is read by python-decouple.
+# OPENAI_MODEL defaults to "gpt-4o-mini" if not set.
+OPENAI_API_KEY = config("OPENAI_API_KEY", default="")
+OPENAI_MODEL = config("OPENAI_MODEL", default="gpt-4o-mini")
+
+# Development: when DEBUG=True and AI fails (e.g. quota exceeded), return
+# mock AI data so the UI can be verified without a valid API key.
+# NEVER enable in production.
+DEBUG_AI = config("DEBUG_AI", default=DEBUG, cast=bool)
+
 import os
 import cloudinary
 
