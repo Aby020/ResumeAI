@@ -55,8 +55,7 @@ staticfiles_build/
 Thumbs.db
 Desktop.ini
 
-# ─── Local tooling / Claude Code ──────────────────────────────────────────
-.claude/
+
 
 # ─── Large media not meant for the repo ───────────────────────────────────
 screenshots/*.gif
