@@ -21,6 +21,9 @@ pdfplumber==0.11.10
 cloudinary==1.45.0
 django-cloudinary-storage==0.3.0
 
+# ── AI / OpenAI ───────────────────────────────────────────────────────────
+openai==1.55.0
+
 # ── NLP ───────────────────────────────────────────────────────────────────
 # The spaCy English model is NOT pip-installable from every index. Install it
 # with spaCy's official command (after pip install -r requirements.txt):
