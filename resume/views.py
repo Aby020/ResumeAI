@@ -87,24 +87,30 @@ def resume_history(request):
 
 @login_required
 def analyze_resume(request, resume_id):
+    logger.info("analyze_resume: start resume_id=%s user_id=%s", resume_id, request.user.id)
     resume = get_object_or_404(
         Resume,
         id=resume_id,
         user=request.user,
         is_deleted=False,
     )
+    logger.info("analyze_resume: resume retrieved id=%s file=%s", resume.id, getattr(resume.file, "name", None))
 
     analysis, created = ResumeAnalysis.objects.get_or_create(
         resume=resume,
     )
+    logger.info("analyze_resume: ResumeAnalysis %s id=%s", "created" if created else "retrieved", analysis.id)
 
     # ------------------------------------------------------------------
     # Read the PDF bytes once. Unreadable files degrade gracefully: render
     # the last cached analysis if one exists, otherwise explain and redirect.
     # ------------------------------------------------------------------
+    logger.info("analyze_resume: read_file_bytes start")
     pdf_bytes = read_file_bytes(resume.file)
+    logger.info("analyze_resume: read_file_bytes end bytes=%s", len(pdf_bytes) if pdf_bytes else None)
 
     if pdf_bytes is None:
+        logger.warning("analyze_resume: pdf_bytes is None, file unreadable")
         if analysis.resume_json:
             context = context_from_payload(analysis.resume_json)
             # Include cached AI results from the model
@@ -133,6 +139,7 @@ def analyze_resume(request, resume_id):
     cache_key = build_cache_key(pdf_bytes, job_description)
 
     if meta.get("cache_key") == cache_key:
+        logger.info("analyze_resume: cache HIT")
         context = context_from_payload(cached)
         # Include cached AI results from the model
         context["ai_explanation"] = analysis.ai_explanation
@@ -142,10 +149,12 @@ def analyze_resume(request, resume_id):
             "resume/analysis.html",
             {**context, "resume": resume, "analysis": analysis},
         )
+    logger.info("analyze_resume: cache MISS")
 
     # ------------------------------------------------------------------
     # Cache miss: run the full pipeline once and persist the results.
     # ------------------------------------------------------------------
+    logger.info("analyze_resume: run_analysis_pipeline start")
     try:
         context, payload = run_analysis_pipeline(pdf_bytes, job_description)
     except Exception:
@@ -156,6 +165,7 @@ def analyze_resume(request, resume_id):
             "without an extractable text layer.",
         )
         return redirect("resume_history")
+    logger.info("analyze_resume: run_analysis_pipeline end")
 
     ats = payload["ats"]
     job = payload["job"]
@@ -167,15 +177,22 @@ def analyze_resume(request, resume_id):
     analysis.improvement_areas = ats["improvements"]
     analysis.resume_json = payload
     analysis.save()
+    logger.info("analyze_resume: analysis saved id=%s", analysis.id)
 
     # Call AI service for explanation and rewrite (async-style, but sync here)
     ai_service = get_ai_service()
+    logger.info("analyze_resume: AI service enabled=%s", ai_service._enabled)
     ai_explanation = None
     ai_rewrite = None
     if ai_service._enabled:
         # Use cached or fresh results
+        logger.info("analyze_resume: ai_service.explain start")
         ai_explanation = ai_service.explain(ats, job, payload["text"])
+        logger.info("analyze_resume: ai_service.explain end result=%s", ai_explanation is not None)
+
+        logger.info("analyze_resume: ai_service.rewrite start")
         ai_rewrite = ai_service.rewrite(ats, job, payload["text"])
+        logger.info("analyze_resume: ai_service.rewrite end result=%s", ai_rewrite is not None)
 
         # Cache results on the analysis model for future renders
         if ai_explanation:
@@ -184,11 +201,13 @@ def analyze_resume(request, resume_id):
             analysis.ai_rewrite = ai_rewrite.model_dump(mode="json")
         if ai_explanation or ai_rewrite:
             analysis.save(update_fields=["ai_explanation", "ai_rewrite"])
+            logger.info("analyze_resume: AI results cached on analysis model")
 
     # Include AI results in context
     context["ai_explanation"] = ai_explanation
     context["ai_rewrite"] = ai_rewrite
 
+    logger.info("analyze_resume: rendering template")
     return render(
         request,
         "resume/analysis.html",
