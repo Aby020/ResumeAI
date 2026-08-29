@@ -59,3 +59,8 @@ Desktop.ini
 
 # ─── Large media not meant for the repo ───────────────────────────────────
 screenshots/*.gif
+
+# ─── Local test / dev artifacts ────────────────────────────────────────────
+cookies.txt
+test_ai_layer.py
+test_resume.pdf

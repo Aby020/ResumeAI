@@ -201,11 +201,17 @@ DEBUG_AI = config("DEBUG_AI", default=DEBUG, cast=bool)
 import os
 import cloudinary
 
-if os.environ.get("RENDER"):
+# Cloudinary Configuration
+# Safely handle potential missing credentials by only configuring if all exist.
+cloudinary_cloud_name = config("CLOUDINARY_CLOUD_NAME", default="")
+cloudinary_api_key = config("CLOUDINARY_API_KEY", default="")
+cloudinary_api_secret = config("CLOUDINARY_API_SECRET", default="")
+
+if os.environ.get("RENDER") and all([cloudinary_cloud_name, cloudinary_api_key, cloudinary_api_secret]):
     cloudinary.config(
-        cloud_name=config("CLOUDINARY_CLOUD_NAME"),
-        api_key=config("CLOUDINARY_API_KEY"),
-        api_secret=config("CLOUDINARY_API_SECRET"),
+        cloud_name=cloudinary_cloud_name,
+        api_key=cloudinary_api_key,
+        api_secret=cloudinary_api_secret,
         secure=True,
     )
 
@@ -218,6 +224,7 @@ if os.environ.get("RENDER"):
         },
     }
 else:
+    # Fallback to local storage if Cloudinary is misconfigured or not on Render
     STORAGES = {
         "default": {
             "BACKEND": "django.core.files.storage.FileSystemStorage",
