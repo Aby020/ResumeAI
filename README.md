@@ -80,6 +80,10 @@ layer that owns the pipeline, and a caching layer that makes re-analysis free.
   <em>✨ ResumeAI V2 landing page demonstration</em>
 </p>
 
+<p align="center">
+  <strong>▶️ Try it live:</strong> <a href="https://resumeai-backend-8rza.onrender.com">resumeai-backend-8rza.onrender.com</a>
+</p>
+
 ---
 
 ## 📸 Screenshots
