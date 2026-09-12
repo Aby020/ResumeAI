@@ -33,8 +33,16 @@ export function RecommendationsSection({
   recommendations,
   ai,
 }: RecommendationsSectionProps) {
-  const aiCount = ai?.items.length ?? 0
-  const total = aiCount + recommendations.length
+  // `ai_explanation` is a plain JSON field on the backend and serializes as
+  // `{}` until a valid model response is cached (the AI service may be
+  // disabled or the provider call may fail). `{}` is truthy but has no
+  // `items`, so reading `ai?.items.length` would throw at runtime even though
+  // the type says the field is `AiExplanation | null`. Only treat the payload
+  // as real when it is well-formed; otherwise fall through to the engine
+  // recommendations.
+  const aiItems = Array.isArray(ai?.items) ? ai.items : []
+  const aiSummary = typeof ai?.summary === 'string' ? ai.summary : ''
+  const total = aiItems.length + recommendations.length
 
   return (
     <Panel
@@ -57,15 +65,15 @@ export function RecommendationsSection({
         </div>
       ) : (
         <div>
-          {ai && (
+          {aiItems.length > 0 && (
             <>
-              {ai.summary.trim() !== '' && (
+              {aiSummary.trim() !== '' && (
                 <p className="border-b border-line px-6 py-4 text-sm leading-relaxed text-text-soft">
-                  {ai.summary}
+                  {aiSummary}
                 </p>
               )}
               <ol className="divide-y divide-line">
-                {ai.items.map((item, i) => (
+                {aiItems.map((item, i) => (
                   <li
                     key={`${item.category}-${i}`}
                     className="flex gap-5 px-6 py-5"
@@ -119,7 +127,7 @@ export function RecommendationsSection({
                     aria-hidden="true"
                     className="shrink-0 font-mono text-sm font-semibold tabular-nums text-primary"
                   >
-                    {numbered(aiCount + i)}
+                    {numbered(aiItems.length + i)}
                   </span>
                   <p className="min-w-0 text-sm leading-relaxed text-text">
                     {recommendation}
