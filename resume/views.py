@@ -179,29 +179,38 @@ def analyze_resume(request, resume_id):
     analysis.save()
     logger.info("analyze_resume: analysis saved id=%s", analysis.id)
 
-    # Call AI service for explanation and rewrite (async-style, but sync here)
-    ai_service = get_ai_service()
-    logger.info("analyze_resume: AI service enabled=%s", ai_service._enabled)
+    # Call AI service for explanation and rewrite (async-style, but sync here).
+    # Best-effort enrichment over the already-persisted deterministic results:
+    # the service returns None on provider/validation failures, and the outer
+    # guard ensures an unexpected AI-side exception can never fail the page.
     ai_explanation = None
     ai_rewrite = None
-    if ai_service._enabled:
-        # Use cached or fresh results
-        logger.info("analyze_resume: ai_service.explain start")
-        ai_explanation = ai_service.explain(ats, job, payload["text"])
-        logger.info("analyze_resume: ai_service.explain end result=%s", ai_explanation is not None)
+    try:
+        ai_service = get_ai_service()
+        logger.info("analyze_resume: AI service enabled=%s", ai_service._enabled)
+        if ai_service._enabled:
+            # Use cached or fresh results
+            logger.info("analyze_resume: ai_service.explain start")
+            ai_explanation = ai_service.explain(ats, job, payload["text"])
+            logger.info("analyze_resume: ai_service.explain end result=%s", ai_explanation is not None)
 
-        logger.info("analyze_resume: ai_service.rewrite start")
-        ai_rewrite = ai_service.rewrite(ats, job, payload["text"])
-        logger.info("analyze_resume: ai_service.rewrite end result=%s", ai_rewrite is not None)
+            logger.info("analyze_resume: ai_service.rewrite start")
+            ai_rewrite = ai_service.rewrite(ats, job, payload["text"])
+            logger.info("analyze_resume: ai_service.rewrite end result=%s", ai_rewrite is not None)
 
-        # Cache results on the analysis model for future renders
-        if ai_explanation:
-            analysis.ai_explanation = ai_explanation.model_dump(mode="json")
-        if ai_rewrite:
-            analysis.ai_rewrite = ai_rewrite.model_dump(mode="json")
-        if ai_explanation or ai_rewrite:
-            analysis.save(update_fields=["ai_explanation", "ai_rewrite"])
-            logger.info("analyze_resume: AI results cached on analysis model")
+            # Cache results on the analysis model for future renders
+            if ai_explanation:
+                analysis.ai_explanation = ai_explanation.model_dump(mode="json")
+            if ai_rewrite:
+                analysis.ai_rewrite = ai_rewrite.model_dump(mode="json")
+            if ai_explanation or ai_rewrite:
+                analysis.save(update_fields=["ai_explanation", "ai_rewrite"])
+                logger.info("analyze_resume: AI results cached on analysis model")
+    except Exception:
+        logger.exception(
+            "analyze_resume: AI enrichment failed for resume_id=%s; analysis preserved",
+            resume.id,
+        )
 
     # Include AI results in context
     context["ai_explanation"] = ai_explanation

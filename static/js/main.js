@@ -257,5 +257,87 @@
     } else if (mediaQuery.addListener) {
       mediaQuery.addListener(handleBreakpointChange);
     }
+
+    // ── Reveal-on-scroll (dormant until [data-animate] is added to elements) ──
+    // Optionally staggers via an inline data-reveal-delay (e.g. "0.12s").
+    if ("IntersectionObserver" in window) {
+      var animateEls = document.querySelectorAll("[data-animate]");
+      if (animateEls.length) {
+        var revealObserver = new IntersectionObserver(
+          function (entries) {
+            entries.forEach(function (entry) {
+              if (entry.isIntersecting) {
+                if (entry.target.dataset.revealDelay) {
+                  entry.target.style.transitionDelay = entry.target.dataset.revealDelay;
+                }
+                entry.target.classList.add("is-visible");
+                revealObserver.unobserve(entry.target);
+                // Clear the delay once settled so later interactions are snappy.
+                window.setTimeout(function () {
+                  entry.target.style.transitionDelay = "";
+                }, 900);
+              }
+            });
+          },
+          { threshold: 0.15 }
+        );
+        animateEls.forEach(function (el) {
+          revealObserver.observe(el);
+        });
+      }
+    }
+
+    // ── Score count-up — [data-count] values animate once they scroll into view ──
+    // Landing decorative previews only; no-op on other pages.
+    if ("IntersectionObserver" in window) {
+      var countEls = document.querySelectorAll("[data-count]");
+      if (countEls.length) {
+        var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+        function animateCount(el) {
+          var target = parseInt(el.getAttribute("data-count"), 10) || 0;
+          var duration = parseInt(el.getAttribute("data-count-duration"), 10) || 1200;
+
+          if (!window.requestAnimationFrame || reduceMotion) {
+            el.textContent = String(target);
+            return;
+          }
+
+          var start = null;
+
+          function step(timestamp) {
+            if (start === null) {
+              start = timestamp;
+            }
+            var progress = Math.min((timestamp - start) / duration, 1);
+            var eased = 1 - Math.pow(1 - progress, 3); // easeOutCubic
+            el.textContent = String(Math.round(eased * target));
+            if (progress < 1) {
+              window.requestAnimationFrame(step);
+            } else {
+              el.textContent = String(target);
+            }
+          }
+
+          window.requestAnimationFrame(step);
+        }
+
+        var countObserver = new IntersectionObserver(
+          function (entries) {
+            entries.forEach(function (entry) {
+              if (entry.isIntersecting) {
+                animateCount(entry.target);
+                countObserver.unobserve(entry.target);
+              }
+            });
+          },
+          { threshold: 0.5 }
+        );
+
+        countEls.forEach(function (el) {
+          countObserver.observe(el);
+        });
+      }
+    }
   });
 })();

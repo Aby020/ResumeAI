@@ -26,6 +26,17 @@ logger = logging.getLogger(__name__)
 CACHE_VERSION = 1
 
 
+class ResumeExtractionError(ValueError):
+    """Raised when a resume PDF yields no readable text.
+
+    An uploaded PDF may be structurally valid but carry no text layer — a
+    scanned document saved from paper without OCR, for example. Analyzing an
+    empty string would score 0 across every ATS category and make an
+    extraction failure look like a legitimate (if terrible) resume. Callers
+    treat this as a processing failure, never as a score.
+    """
+
+
 def read_file_bytes(file_obj):
     """
     Read a file object's bytes safely.
@@ -61,6 +72,15 @@ def run_analysis_pipeline(pdf_bytes, job_description):
     """
     parsed = parse_pdf(pdf_bytes)
     text = parsed["text"]
+
+    # An empty extraction is a processing failure (scanned page without a
+    # text layer, encrypted/odd encoding), not a resume worth scoring 0.
+    # Failing here keeps a corrupt file from persisting a misleading 0.
+    if not parsed["has_text"]:
+        raise ResumeExtractionError(
+            "No readable text was found in this PDF. It may be a scanned "
+            "document without a text layer — please upload a text-based PDF."
+        )
 
     # Single parse shared by every scoring stage.
     doc = analyze(

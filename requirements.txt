@@ -22,6 +22,11 @@ pdfplumber==0.11.10
 cloudinary==1.45.0
 django-cloudinary-storage==0.3.0
 
+# ── REST API (DRF + JWT + CORS) ───────────────────────────────────────────
+djangorestframework==3.18.0
+djangorestframework-simplejwt==5.5.1
+django-cors-headers==4.5.0
+
 # ── AI / OpenAI ───────────────────────────────────────────────────────────
 openai==1.55.0
 

@@ -1,127 +1,294 @@
 {% extends "public_base.html" %}
 
 {% block title %}
-ResumeAI — AI Powered Resume Analysis
+ResumeAI — Turn potential into opportunity
 {% endblock %}
 
 {% block content %}
 
-{# ── Hero ── #}
-<section class="landing-hero">
-    <div class="container position-relative" style="max-width:860px;">
+{# ═══════════════════════════════════════════════════════════════ #}
+{# SECTION 1 — HERO                                              #}
+{# ═══════════════════════════════════════════════════════════════ #}
+<section class="lp-hero lp-hero-enter">
+    <div class="lp-wrap">
+        <div class="lp-hero-grid">
 
-        <div class="d-inline-flex mb-4">
-            <span class="hero-badge">
-                <i class="bi bi-stars" aria-hidden="true"></i>
-                AI Powered Resume Analysis Platform
-            </span>
+            {# Left — copy + CTA #}
+            <div class="lp-hero-copy">
+
+                <p class="lp-eyebrow">
+                    <span class="lp-eyebrow-dot" aria-hidden="true"></span>
+                    Career Intelligence
+                </p>
+
+                <p class="lp-hero-script">
+                    Turn potential into opportunity
+                    <svg class="lp-hero-arrow" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg>
+                </p>
+
+                <h1>A Stronger Resume<br>Opens <em class="lp-accent">Brighter Doors.</em></h1>
+
+                <p class="lp-hero-sub">
+                    <strong>Get an instant ATS score</strong>, discover exactly how your resume
+                    compares to the job you want, and receive <strong>AI-powered suggestions</strong>
+                    to improve your chances &mdash; <strong>all in seconds.</strong>
+                </p>
+
+                <div class="lp-hero-actions">
+                    <a href="{% url 'register' %}" class="btn lp-btn lp-btn-primary lp-btn-lg">
+                        <i class="bi bi-rocket-takeoff" aria-hidden="true"></i>
+                        Analyze My Resume
+                        <span class="lp-btn-arrow">&rarr;</span>
+                    </a>
+                    <a href="#how-it-works" class="lp-btn lp-btn-play" aria-label="See how ResumeAI works">
+                        <span class="lp-play-icon">
+                            <i class="bi bi-play-fill" aria-hidden="true"></i>
+                        </span>
+                        Watch Demo
+                    </a>
+                </div>
+
+                <div class="lp-hero-trust">
+                    <span class="lp-trust-badge">
+                        <i class="bi bi-check-circle-fill" aria-hidden="true"></i>
+                        Free to try
+                    </span>
+                    <span class="lp-trust-badge">
+                        <i class="bi bi-check-circle-fill" aria-hidden="true"></i>
+                        No credit card
+                    </span>
+                    <span class="lp-trust-badge">
+                        <i class="bi bi-check-circle-fill" aria-hidden="true"></i>
+                        Results in seconds
+                    </span>
+                </div>
+
+            </div>
+
+            {# Right — product card (decorative) #}
+            <div class="lp-hero-visual" aria-hidden="true">
+                <div class="lp-product-card">
+
+                    {# Card header #}
+                    <div class="lp-pc-header">
+                        <div class="lp-pc-header-left">
+                            <span class="lp-pc-icon">
+                                <i class="bi bi-file-earmark-text-fill" aria-hidden="true"></i>
+                            </span>
+                            <div>
+                                <span class="lp-pc-title">Product Designer Resume</span>
+                                <span class="lp-pc-meta">Analyzed 2 minutes ago</span>
+                            </div>
+                        </div>
+                        <span class="lp-pc-link">View Full Report &rarr;</span>
+                    </div>
+
+                    {# Score cards #}
+                    <div class="lp-pc-scores">
+                        <div class="lp-score-card">
+                            <div class="lp-sc-top">
+                                <span class="lp-sc-label">ATS Readiness</span>
+                                <span class="lp-sc-value"><span data-count="87">0</span>/100</span>
+                            </div>
+                            <div class="lp-sc-bar"><span style="--bar-w:87%; --bar-c:var(--success)"></span></div>
+                        </div>
+                        <div class="lp-score-card">
+                            <div class="lp-sc-top">
+                                <span class="lp-sc-label">Job Match</span>
+                                <span class="lp-sc-value"><span data-count="78">0</span>/100</span>
+                            </div>
+                            <div class="lp-sc-bar"><span style="--bar-w:78%; --bar-c:var(--primary)"></span></div>
+                        </div>
+                    </div>
+
+                    {# Top matching skills #}
+                    <div class="lp-pc-section">
+                        <span class="lp-pc-section-title">
+                            <i class="bi bi-check-circle-fill" style="color:var(--success)" aria-hidden="true"></i>
+                            Top Matching Skills
+                        </span>
+                        <div class="lp-pc-skills">
+                            <span class="lp-chip match">Figma</span>
+                            <span class="lp-chip match">UI/UX Design</span>
+                            <span class="lp-chip match">Product Strategy</span>
+                            <span class="lp-chip match">User Research</span>
+                            <span class="lp-chip match">Design Systems</span>
+                        </div>
+                    </div>
+
+                    {# Missing skills #}
+                    <div class="lp-pc-section">
+                        <span class="lp-pc-section-title">
+                            <i class="bi bi-x-circle-fill" style="color:var(--danger)" aria-hidden="true"></i>
+                            Missing Skills
+                        </span>
+                        <div class="lp-pc-skills">
+                            <span class="lp-chip gap">A/B Testing</span>
+                            <span class="lp-chip gap">SQL</span>
+                            <span class="lp-chip gap">Data Analysis</span>
+                            <span class="lp-chip gap">Conversion Optimization</span>
+                            <span class="lp-chip gap">Stakeholder Management</span>
+                        </div>
+                    </div>
+
+                    {# AI Suggestion #}
+                    <div class="lp-pc-suggestion">
+                        <div class="lp-pc-suggestion-header">
+                            <i class="bi bi-star-fill" style="color:var(--warning)" aria-hidden="true"></i>
+                            <strong>AI Suggestion</strong>
+                        </div>
+                        <p>Consider quantifying your impact with specific metrics. For example, mention percentage improvements in user engagement or conversion rates from your design work.</p>
+                        <span class="lp-pc-link">View Suggestions &rarr;</span>
+                    </div>
+
+                    {# Bottom chart #}
+                    <div class="lp-pc-chart">
+                        <div class="lp-pc-chart-label">
+                            <i class="bi bi-graph-up-arrow" style="color:var(--success)" aria-hidden="true"></i>
+                            Your resume is 3x more likely to get noticed
+                        </div>
+                        <svg class="lp-pc-chart-svg" viewBox="0 0 320 48" preserveAspectRatio="none" aria-hidden="true">
+                            <defs>
+                                <linearGradient id="chartFill" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="0%" stop-color="var(--success)" stop-opacity="0.3"/>
+                                    <stop offset="100%" stop-color="var(--success)" stop-opacity="0"/>
+                                </linearGradient>
+                            </defs>
+                            <path d="M0,38 Q40,34 80,28 T160,20 T240,12 T320,4 V48 H0Z" fill="url(#chartFill)"/>
+                            <path d="M0,38 Q40,34 80,28 T160,20 T240,12 T320,4" fill="none" stroke="var(--success)" stroke-width="2.5" stroke-linecap="round"/>
+                        </svg>
+                    </div>
+
+                </div>
+            </div>
+
         </div>
-
-        <h1>Land More Interviews With ResumeAI</h1>
-
-        <p class="lead text-muted mx-auto mt-4" style="max-width:640px;">
-            Analyze your resume, improve your ATS score, discover missing skills, and increase your chances of getting shortlisted — all in seconds.
-        </p>
-
-        <div class="d-flex justify-content-center gap-3 mt-5 flex-wrap">
-            <a href="{% url 'register' %}" class="btn btn-primary btn-lg px-5">
-                <i class="bi bi-rocket-takeoff me-1" aria-hidden="true"></i>
-                Get Started
-            </a>
-            <a href="{% url 'login' %}" class="btn btn-outline-secondary btn-lg px-5">Sign In</a>
-        </div>
-
-        <p class="text-muted small mt-4 mb-0">
-            Free to try · No credit card required · Upload your first resume in under a minute
-        </p>
-
     </div>
 </section>
 
-{# ── Features ── #}
-<section class="py-5">
-    <div class="container">
+{# ═══════════════════════════════════════════════════════════════ #}
+{# SECTION 2 — TRUST STRIP                                       #}
+{# ═══════════════════════════════════════════════════════════════ #}
+<section class="lp-trust-strip" data-animate>
+    <div class="lp-wrap">
+        <p class="lp-trust-label">Trusted by aspiring professionals worldwide</p>
+        <div class="lp-trust-logos">
+            <span class="lp-trust-logo">Google</span>
+            <span class="lp-trust-logo">Microsoft</span>
+            <span class="lp-trust-logo">Amazon</span>
+            <span class="lp-trust-logo">Meta</span>
+            <span class="lp-trust-logo">Adobe</span>
+            <span class="lp-trust-logo">Spotify</span>
+        </div>
+    </div>
+</section>
 
-        <div class="text-center mb-5">
-            <p class="eyebrow mb-2">Features</p>
-            <h2 class="fw-bold mb-2">Everything you need to stand out</h2>
-            <p class="text-muted mx-auto mb-0" style="max-width:560px;">
-                ResumeAI turns your resume into a data-driven roadmap for landing more interviews.
+{# ═══════════════════════════════════════════════════════════════ #}
+{# SECTION 3 — CAPABILITIES STRIP                                #}
+{# ═══════════════════════════════════════════════════════════════ #}
+<section class="lp-capabilities" id="features" data-animate>
+    <div class="lp-wrap">
+        <div class="lp-cap-grid">
+
+            <div class="lp-cap-card">
+                <span class="lp-cap-icon">
+                    <i class="bi bi-clipboard-data-fill" aria-hidden="true"></i>
+                </span>
+                <h3 class="lp-cap-title">ATS Analysis</h3>
+                <p class="lp-cap-desc">Score across ten weighted rubric categories that mirror real applicant tracking systems.</p>
+            </div>
+
+            <div class="lp-cap-card">
+                <span class="lp-cap-icon">
+                    <i class="bi bi-bullseye" aria-hidden="true"></i>
+                </span>
+                <h3 class="lp-cap-title">Job Matching</h3>
+                <p class="lp-cap-desc">Compare your resume directly against any job description to measure real-world fit.</p>
+            </div>
+
+            <div class="lp-cap-card">
+                <span class="lp-cap-icon">
+                    <i class="bi bi-lightning-charge-fill" aria-hidden="true"></i>
+                </span>
+                <h3 class="lp-cap-title">Skills Insights</h3>
+                <p class="lp-cap-desc">See matching skills, missing gaps, and irrelevant noise in one clear view.</p>
+            </div>
+
+            <div class="lp-cap-card">
+                <span class="lp-cap-icon">
+                    <i class="bi bi-stars" aria-hidden="true"></i>
+                </span>
+                <h3 class="lp-cap-title">AI Improvements</h3>
+                <p class="lp-cap-desc">Get prioritized, section-level edits with estimated score impact for each change.</p>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+{# ═══════════════════════════════════════════════════════════════ #}
+{# SECTION 4 — HOW IT WORKS                                      #}
+{# ═══════════════════════════════════════════════════════════════ #}
+<section class="lp-section lp-how" id="how-it-works">
+    <div class="lp-wrap">
+
+        <header class="lp-section-head lp-section-head--center" data-animate>
+            <p class="lp-eyebrow lp-eyebrow--center">
+                <span class="lp-eyebrow-dot" aria-hidden="true"></span>
+                Simple. Powerful. Effective.
             </p>
-        </div>
+            <h2 class="lp-h2-serif">How It Works</h2>
+            <p class="lp-lead">From upload to interview readiness &mdash; in just a few steps.</p>
+        </header>
 
-        <div class="row g-4">
+        <div class="lp-steps-rail" data-animate>
 
-            <div class="col-12 col-md-6 col-lg-3">
-                <article class="feature-card">
-                    <div class="feature-icon"><i class="bi bi-award" aria-hidden="true"></i></div>
-                    <h3 class="h6 fw-bold">ATS Analysis</h3>
-                    <p class="text-muted small mb-0">Get an instant ATS score with a detailed breakdown of every resume section.</p>
-                </article>
+            <div class="lp-step">
+                <span class="lp-step-circle">
+                    <span class="lp-step-num">01</span>
+                </span>
+                <span class="lp-step-icon"><i class="bi bi-cloud-arrow-up-fill" aria-hidden="true"></i></span>
+                <h3 class="lp-step-title">Upload Resume</h3>
+                <p>Drag and drop your resume or select a file. We support PDF and DOCX formats.</p>
             </div>
 
-            <div class="col-12 col-md-6 col-lg-3">
-                <article class="feature-card">
-                    <div class="feature-icon"><i class="bi bi-briefcase" aria-hidden="true"></i></div>
-                    <h3 class="h6 fw-bold">Job Matching</h3>
-                    <p class="text-muted small mb-0">Paste a job description and see exactly how well your resume matches.</p>
-                </article>
+            <div class="lp-step-arrow-wrap" aria-hidden="true">
+                <svg width="48" height="16" viewBox="0 0 48 16"><path d="M0 8h40m0 0l-6-5m6 5l-6 5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-dasharray="4 3"/></svg>
             </div>
 
-            <div class="col-12 col-md-6 col-lg-3">
-                <article class="feature-card">
-                    <div class="feature-icon"><i class="bi bi-lightbulb" aria-hidden="true"></i></div>
-                    <h3 class="h6 fw-bold">Skill Insights</h3>
-                    <p class="text-muted small mb-0">Discover matching, missing, and extra skills compared to your target role.</p>
-                </article>
+            <div class="lp-step">
+                <span class="lp-step-circle">
+                    <span class="lp-step-num">02</span>
+                </span>
+                <span class="lp-step-icon"><i class="bi bi-clipboard-data-fill" aria-hidden="true"></i></span>
+                <h3 class="lp-step-title">ATS Analysis</h3>
+                <p>Get a detailed score across ten weighted dimensions that mirror real ATS systems.</p>
             </div>
 
-            <div class="col-12 col-md-6 col-lg-3">
-                <article class="feature-card">
-                    <div class="feature-icon"><i class="bi bi-shield-check" aria-hidden="true"></i></div>
-                    <h3 class="h6 fw-bold">Secure Storage</h3>
-                    <p class="text-muted small mb-0">Your resumes and analysis are stored securely and privately per account.</p>
-                </article>
+            <div class="lp-step-arrow-wrap" aria-hidden="true">
+                <svg width="48" height="16" viewBox="0 0 48 16"><path d="M0 8h40m0 0l-6-5m6 5l-6 5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-dasharray="4 3"/></svg>
             </div>
 
-        </div>
-
-    </div>
-</section>
-
-{# ── How it works ── #}
-<section class="py-5">
-    <div class="container">
-
-        <div class="text-center mb-5">
-            <p class="eyebrow mb-2">How It Works</p>
-            <h2 class="fw-bold mb-0">Three simple steps</h2>
-        </div>
-
-        <div class="row g-4">
-
-            <div class="col-12 col-md-4">
-                <article class="step-card">
-                    <div class="step-number">1</div>
-                    <h3 class="h6 fw-bold">Upload your resume</h3>
-                    <p class="text-muted small mb-0">Drop your PDF resume and give it a title. No setup required.</p>
-                </article>
+            <div class="lp-step">
+                <span class="lp-step-circle">
+                    <span class="lp-step-num">03</span>
+                </span>
+                <span class="lp-step-icon"><i class="bi bi-bullseye" aria-hidden="true"></i></span>
+                <h3 class="lp-step-title">Job Comparison</h3>
+                <p>Compare against any job description to see matching skills and gaps.</p>
             </div>
 
-            <div class="col-12 col-md-4">
-                <article class="step-card">
-                    <div class="step-number">2</div>
-                    <h3 class="h6 fw-bold">Get AI analysis</h3>
-                    <p class="text-muted small mb-0">Receive your ATS score, section breakdown, and strengths instantly.</p>
-                </article>
+            <div class="lp-step-arrow-wrap" aria-hidden="true">
+                <svg width="48" height="16" viewBox="0 0 48 16"><path d="M0 8h40m0 0l-6-5m6 5l-6 5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-dasharray="4 3"/></svg>
             </div>
 
-            <div class="col-12 col-md-4">
-                <article class="step-card">
-                    <div class="step-number">3</div>
-                    <h3 class="h6 fw-bold">Improve & re-upload</h3>
-                    <p class="text-muted small mb-0">Apply the recommendations, re-analyze, and watch your score climb.</p>
-                </article>
+            <div class="lp-step">
+                <span class="lp-step-circle">
+                    <span class="lp-step-num">04</span>
+                </span>
+                <span class="lp-step-icon"><i class="bi bi-stars" aria-hidden="true"></i></span>
+                <h3 class="lp-step-title">AI Improvements</h3>
+                <p>Apply targeted edits to improve your score and re-analyze to track your progress.</p>
             </div>
 
         </div>
@@ -129,41 +296,196 @@ ResumeAI — AI Powered Resume Analysis
     </div>
 </section>
 
-{# ── Stats ── #}
-<section class="py-4">
-    <div class="container">
-        <div class="stats-band">
-            <div>
-                <div class="stat-value">100%</div>
-                <div class="stat-label">Resumes Analyzed</div>
+{# ═══════════════════════════════════════════════════════════════ #}
+{# SECTION 5 — MORE THAN JUST A SCORE (DETAILED INSIGHTS)        #}
+{# ═══════════════════════════════════════════════════════════════ #}
+<section class="lp-section lp-band lp-insights" id="benefits">
+    <div class="lp-wrap">
+
+        <header class="lp-section-head" data-animate>
+            <p class="lp-eyebrow">
+                <span class="lp-eyebrow-dot" aria-hidden="true"></span>
+                Detailed Insights
+            </p>
+            <h2 class="lp-h2-serif">More Than Just a Score</h2>
+        </header>
+
+        <div class="lp-insights-grid">
+
+            {# Left — resume mockup #}
+            <div class="lp-resume-mockup" data-animate aria-hidden="true">
+                <div class="lp-rm-card">
+                    <h4 class="lp-rm-name">Alex Morgan</h4>
+                    <p class="lp-rm-role">Product Designer</p>
+
+                    <div class="lp-rm-scores">
+                        <div class="lp-rm-score">
+                            <span class="lp-rm-score-label">ATS</span>
+                            <span class="lp-rm-score-val" style="color:var(--success)">87/100</span>
+                        </div>
+                        <div class="lp-rm-score">
+                            <span class="lp-rm-score-label">Job Match</span>
+                            <span class="lp-rm-score-val" style="color:var(--primary)">78/100</span>
+                        </div>
+                    </div>
+
+                    <div class="lp-rm-section">
+                        <span class="lp-rm-section-title">Experience</span>
+                        <p>Senior Product Designer &mdash; TechCorp (2020&ndash;Present)</p>
+                        <p>Led design system overhaul serving 2M+ users</p>
+                    </div>
+
+                    <div class="lp-rm-section">
+                        <span class="lp-rm-section-title">Education</span>
+                        <p>B.F.A. Interaction Design &mdash; SVA (2016&ndash;2020)</p>
+                    </div>
+
+                    <div class="lp-rm-section">
+                        <span class="lp-rm-section-title">Skills</span>
+                        <div class="lp-rm-skills">
+                            <span class="lp-chip match">Figma</span>
+                            <span class="lp-chip match">UI/UX</span>
+                            <span class="lp-chip match">Prototyping</span>
+                            <span class="lp-chip match">Design Systems</span>
+                            <span class="lp-chip match">User Research</span>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div>
-                <div class="stat-value">10+</div>
-                <div class="stat-label">ATS Criteria</div>
+
+            {# Right — feature grid #}
+            <div class="lp-insights-features" data-animate data-reveal-delay="0.12s">
+
+                <div class="lp-insight-feat">
+                    <span class="lp-insight-feat-icon">
+                        <i class="bi bi-clipboard-data-fill" aria-hidden="true"></i>
+                    </span>
+                    <div>
+                        <h4 class="lp-insight-feat-title">ATS Analysis</h4>
+                        <p class="lp-insight-feat-desc">Ten weighted rubric dimensions scoring your resume against real ATS criteria.</p>
+                    </div>
+                </div>
+
+                <div class="lp-insight-feat">
+                    <span class="lp-insight-feat-icon">
+                        <i class="bi bi-bullseye" aria-hidden="true"></i>
+                    </span>
+                    <div>
+                        <h4 class="lp-insight-feat-title">Job Match Score</h4>
+                        <p class="lp-insight-feat-desc">See how your resume stacks up against any specific job description.</p>
+                    </div>
+                </div>
+
+                <div class="lp-insight-feat">
+                    <span class="lp-insight-feat-icon">
+                        <i class="bi bi-lightning-charge-fill" aria-hidden="true"></i>
+                    </span>
+                    <div>
+                        <h4 class="lp-insight-feat-title">Skills Gap Analysis</h4>
+                        <p class="lp-insight-feat-desc">Identify matching skills, missing requirements, and irrelevant noise.</p>
+                    </div>
+                </div>
+
+                <div class="lp-insight-feat">
+                    <span class="lp-insight-feat-icon">
+                        <i class="bi bi-stars" aria-hidden="true"></i>
+                    </span>
+                    <div>
+                        <h4 class="lp-insight-feat-title">AI Improvements</h4>
+                        <p class="lp-insight-feat-desc">Prioritized, section-level edits with estimated score impact.</p>
+                    </div>
+                </div>
+
             </div>
-            <div>
-                <div class="stat-value">Real-time</div>
-                <div class="stat-label">Job Match Scoring</div>
-            </div>
-            <div>
-                <div class="stat-value">100%</div>
-                <div class="stat-label">Private & Secure</div>
-            </div>
+
         </div>
+
     </div>
 </section>
 
-{# ── CTA ── #}
-<section class="py-5">
-    <div class="container" style="max-width:820px;">
-        <div class="cta-band">
-            <h2 class="h3 mb-2">Ready to land more interviews?</h2>
-            <p class="mb-4" style="opacity:0.85;">Join ResumeAI and get your personalized ATS score in seconds.</p>
-            <a href="{% url 'register' %}" class="btn btn-primary btn-lg px-5">
-                <i class="bi bi-rocket-takeoff me-1" aria-hidden="true"></i>
-                Get Started Free
-            </a>
+{# ═══════════════════════════════════════════════════════════════ #}
+{# SECTION 6 — IMPACT STATISTICS                                  #}
+{# ═══════════════════════════════════════════════════════════════ #}
+<section class="lp-section lp-impact">
+    <div class="lp-wrap">
+
+        <header class="lp-section-head lp-section-head--center" data-animate>
+            <p class="lp-eyebrow lp-eyebrow--center">
+                <span class="lp-eyebrow-dot" aria-hidden="true"></span>
+                Real Impact
+            </p>
+            <h2 class="lp-h2-serif">Built for What's Next.</h2>
+        </header>
+
+        <div class="lp-impact-grid" data-animate>
+
+            <div class="lp-stat-card">
+                <span class="lp-stat-value" data-count="85">0</span>
+                <span class="lp-stat-suffix">%</span>
+                <p class="lp-stat-desc">of resumes fail initial ATS screening. Our users score above the threshold.</p>
+            </div>
+
+            <div class="lp-stat-card">
+                <span class="lp-stat-value" data-count="3">0</span>
+                <span class="lp-stat-suffix">x</span>
+                <p class="lp-stat-desc">more interview callbacks after optimizing with ResumeAI's recommendations.</p>
+            </div>
+
+            <div class="lp-stat-card">
+                <span class="lp-stat-value" data-count="60">0</span>
+                <span class="lp-stat-suffix">%</span>
+                <p class="lp-stat-desc">average ATS score improvement from the first analysis to the optimized version.</p>
+            </div>
+
         </div>
+
+    </div>
+</section>
+
+{# ═══════════════════════════════════════════════════════════════ #}
+{# SECTION 7 — FINAL CTA                                         #}
+{# ═══════════════════════════════════════════════════════════════ #}
+<section class="lp-cta-wrap" id="cta" data-animate>
+    <div class="lp-wrap">
+
+        <div class="lp-cta">
+
+            {# Decorative light beams #}
+            <div class="lp-cta-beams" aria-hidden="true">
+                <div class="lp-cta-beam lp-cta-beam--1"></div>
+                <div class="lp-cta-beam lp-cta-beam--2"></div>
+            </div>
+
+            {# Vertical side text #}
+            <span class="lp-cta-side-text" aria-hidden="true">Better Resumes. Brighter Futures.</span>
+
+            <p class="lp-eyebrow lp-eyebrow--center lp-cta-eyebrow">
+                <span class="lp-eyebrow-dot" aria-hidden="true"></span>
+                Ready to take the next step?
+            </p>
+
+            <h2 class="lp-h2-serif">Stop Guessing. Start Getting Interviews.</h2>
+
+            <p class="lp-cta-sub">
+                Get a clear ATS score, job-match insights, and a prioritized plan you can act on tonight &mdash; all for free.
+            </p>
+
+            <div class="lp-cta-actions">
+                <a href="{% url 'register' %}" class="btn lp-btn lp-btn-primary lp-btn-lg">
+                    <i class="bi bi-rocket-takeoff" aria-hidden="true"></i>
+                    Analyze My Resume
+                    <span class="lp-btn-arrow">&rarr;</span>
+                </a>
+                <a href="{% url 'login' %}" class="lp-btn lp-btn-cta-outline">
+                    <span class="lp-cta-outline-circle" aria-hidden="true">&circ;</span>
+                    Sign In
+                </a>
+            </div>
+
+            <p class="lp-cta-script">Your next opportunity starts here.</p>
+
+        </div>
+
     </div>
 </section>
 

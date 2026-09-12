@@ -409,8 +409,14 @@ class ClientConfigTests(SimpleTestCase):
         with patch("resume.ai.client.OpenAI") as mock_openai:
             client = OpenAIClient()
             self.assertEqual(client._model, "gpt-4o-mini")
-            # The SDK was constructed with the settings key.
-            mock_openai.assert_called_once_with(api_key="sk-test-123")
+            # The SDK was constructed with the settings key plus the explicit
+            # production timeout/retry bounds (kept under gunicorn's worker
+            # timeout so a hung provider call can't kill a worker).
+            mock_openai.assert_called_once_with(
+                api_key="sk-test-123",
+                timeout=OpenAIClient.REQUEST_TIMEOUT_SECONDS,
+                max_retries=OpenAIClient.REQUEST_MAX_RETRIES,
+            )
 
     @override_settings(OPENAI_API_KEY="")
     def test_init_raises_when_key_missing(self):

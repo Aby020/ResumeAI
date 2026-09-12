@@ -47,6 +47,11 @@ urlpatterns = [
         include("resume.urls")
     ),
 
+    path(
+        "api/",
+        include("api.urls")
+    ),
+
 ]
 
 if settings.DEBUG:
