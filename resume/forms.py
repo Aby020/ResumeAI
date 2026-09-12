@@ -52,3 +52,12 @@ class ResumeForm(forms.ModelForm):
             ),
 
         }
+
+    def clean_file(self):
+        # Mirrors the API serializer's size guard (see Resume.MAX_UPLOAD_BYTES).
+        file = self.cleaned_data.get("file")
+        if file and file.size > Resume.MAX_UPLOAD_BYTES:
+            raise forms.ValidationError(
+                f"Resume PDFs are limited to {Resume.MAX_UPLOAD_BYTES // (1024 * 1024)} MB."
+            )
+        return file

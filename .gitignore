@@ -60,7 +60,16 @@ Desktop.ini
 # ─── Large media not meant for the repo ───────────────────────────────────
 screenshots/*.gif
 
+# ─── Generated / designer-work artifacts (regenerable or local-only) ───────
+graphify-out/
+visual design/
+visual_design_shots/
+
 # ─── Local test / dev artifacts ────────────────────────────────────────────
 cookies.txt
 test_ai_layer.py
 test_resume.pdf
+_qa_seed.py
+.gstack/
+browser_qa/
+Task.md

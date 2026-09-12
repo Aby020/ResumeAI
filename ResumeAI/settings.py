@@ -10,9 +10,12 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
+import os
+
 from pathlib import Path
 from decouple import config, Csv
 import dj_database_url
+from django.core.exceptions import ImproperlyConfigured
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -32,6 +35,20 @@ ALLOWED_HOSTS = config(
     default="127.0.0.1,localhost",
 ).split(",")
 
+# Production: Render sets RENDER=true and exposes the app's public host via
+# RENDER_EXTERNAL_HOSTNAME. Append the Render host so a fresh production
+# deploy works even before ALLOWED_HOSTS is hand-configured — without it every
+# request is rejected with DisallowedHost (400) on the deploy domain. Render's
+# blue/green deploy hostnames are always subdomains of onrender.com.
+if os.environ.get("RENDER"):
+    render_host = os.environ.get("RENDER_EXTERNAL_HOSTNAME", "").strip()
+    if render_host and render_host not in ALLOWED_HOSTS:
+        ALLOWED_HOSTS.append(render_host)
+    if ".onrender.com" not in ALLOWED_HOSTS:
+        ALLOWED_HOSTS.append(".onrender.com")
+
+ALLOWED_HOSTS = [host.strip() for host in ALLOWED_HOSTS if host.strip()]
+
 # Origins allowed to POST CSRF-authenticated requests (needed on HTTPS
 # hosts behind a proxy, e.g. Render). Comma-separated in .env, empty in dev.
 CSRF_TRUSTED_ORIGINS = [
@@ -43,6 +60,21 @@ CSRF_TRUSTED_ORIGINS = [
     )
     if origin
 ]
+
+# ── Production security (active only when DEBUG is off) ────────────────
+# Behind Render's HTTPS proxy, correct https detection requires trusting the
+# X-Forwarded-Proto header. SECURE_SSL_REDIRECT is deliberately NOT enabled:
+# Render's internal health checks don't set X-Forwarded-Proto, so an http
+# health probe would be 301-redirected forever and the service marked
+# unhealthy. Render's public edge already serves HTTPS and can force
+# http→https at the proxy if a strict redirect is ever required.
+if not DEBUG:
+    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    # 1 year; browsers only accept it over HTTPS. Safe once the site is
+    # confirmed HTTPS-only, which Render's public edge is.
+    SECURE_HSTS_SECONDS = 31536000
 
 
 # Application definition
@@ -59,6 +91,10 @@ INSTALLED_APPS = [
     "cloudinary",
     "cloudinary_storage",
 
+    # Django REST Framework (API layer for the React frontend)
+    "rest_framework",
+    "corsheaders",
+
     # Your apps
     "account_manager",
     "dashboard",
@@ -67,6 +103,8 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    # CORS first: must run before any middleware that can generate responses.
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -99,6 +137,15 @@ WSGI_APPLICATION = "ResumeAI.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
+
+# Production safety: on Render, REQUIRE an explicit DATABASE_URL. Silently
+# falling back to the bundled SQLite file would store all data on Render's
+# ephemeral disk and lose it on the next deploy.
+if os.environ.get("RENDER") and not config("DATABASE_URL", default=""):
+    raise ImproperlyConfigured(
+        "DATABASE_URL is required when running on Render. Set it to your "
+        "Neon PostgreSQL connection string in the service environment."
+    )
 
 DATABASES = {
     "default": dj_database_url.config(
@@ -151,7 +198,8 @@ STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
 STATIC_ROOT = BASE_DIR / "staticfiles"
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+# Static files are served through WhiteNoise via the "staticfiles" entry in
+# STORAGES below (STATICFILES_STORAGE is removed in Django 6.0).
 
 
 MEDIA_URL = "/media/"
@@ -169,6 +217,59 @@ LOGIN_URL = "login"
 LOGIN_REDIRECT_URL = "dashboard"
 
 LOGOUT_REDIRECT_URL = "home"
+
+# CORS — exact origins only. Never use CORS_ALLOW_ALL_ORIGINS or wildcard-like
+# values. Normal development is same-origin (Vite proxies /api to Django), so
+# the defaults cover the standalone Vite dev server (:5173) and the
+# production-build preview server (:4173). Production: override
+# CORS_ALLOWED_ORIGINS in the environment with the exact deployed frontend
+# origin(s).
+CORS_ALLOWED_ORIGINS = [
+    origin
+    for origin in config(
+        "CORS_ALLOWED_ORIGINS",
+        default=(
+            "http://localhost:5173,"
+            "http://127.0.0.1:5173,"
+            "http://localhost:4173,"
+            "http://127.0.0.1:4173"
+        ),
+        cast=Csv(),
+    )
+    if origin
+]
+
+# Django REST Framework — the API layer is JWT-only.
+# Session auth for the server-rendered app is untouched (Django middleware /
+# CsrfView stay active). DRF views are csrf_exempt by default, so JWT clients
+# do not need CSRF tokens, and the two auth systems coexist cleanly.
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ),
+    "DEFAULT_PERMISSION_CLASSES": (
+        "rest_framework.permissions.IsAuthenticated",
+    ),
+    # JSON only: consistent API responses for React; no browsable HTML surface.
+    "DEFAULT_RENDERER_CLASSES": (
+        "rest_framework.renderers.JSONRenderer",
+    ),
+}
+
+from datetime import timedelta
+
+# SimpleJWT — tokens are signed with Django's SECRET_KEY (from .env).
+# No refresh-token blacklisting: enabling it would require the
+# token_blacklist app migration, which is out of scope for this task.
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=15),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
+    "ROTATE_REFRESH_TOKENS": False,
+    "BLACKLIST_AFTER_ROTATION": False,
+    "AUTH_HEADER_TYPES": ("Bearer",),
+    "USER_ID_FIELD": "id",
+    "USER_ID_CLAIM": "user_id",
+}
 
 # Email Configuration (SMTP credentials live in .env)
 # A blank EMAIL_HOST_USER disables outbound mail but keeps the app running.
@@ -198,7 +299,6 @@ OPENAI_MODEL = config("OPENAI_MODEL", default="gpt-4o-mini")
 # NEVER enable in production.
 DEBUG_AI = config("DEBUG_AI", default=DEBUG, cast=bool)
 
-import os
 import cloudinary
 
 # Cloudinary Configuration

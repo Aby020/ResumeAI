@@ -61,6 +61,14 @@ class OpenAIClient:
     # Max tokens per call. Explanations fit in ~800; rewrites may need ~1500.
     DEFAULT_MAX_TOKENS = 1600
 
+    # Explicit per-request timeout and SDK retries. The SDK's defaults are
+    # 600s with 2 retries — far longer than a web request should block. Render
+    # starts gunicorn with a 120s worker timeout, so an unbound AI call that
+    # hangs would get the worker killed mid-response. 30s with one SDK retry
+    # keeps the call inside the worker window while surviving transient blips.
+    REQUEST_TIMEOUT_SECONDS = 30
+    REQUEST_MAX_RETRIES = 1
+
     def __init__(self, api_key: str | None = None, model: str | None = None):
         """
         Args:
@@ -72,7 +80,11 @@ class OpenAIClient:
         if not resolved_key:
             raise AIUnavailable("OPENAI_API_KEY not configured in environment")
 
-        self._client = OpenAI(api_key=resolved_key)
+        self._client = OpenAI(
+            api_key=resolved_key,
+            timeout=self.REQUEST_TIMEOUT_SECONDS,
+            max_retries=self.REQUEST_MAX_RETRIES,
+        )
         self._model = model or getattr(settings, "OPENAI_MODEL", None) or self.DEFAULT_MODEL
 
     # -------------------------------------------------------------------------

@@ -29,17 +29,22 @@
 
     <link rel="stylesheet" href="{% static 'vendors/bootstrap-icons/bootstrap-icons.css' %}">
 
+    <!-- Theme bootstrap (prevents FOUC + removes forced light mode on auth pages) -->
+    <script src="{% static 'js/theme-init.js' %}"></script>
+
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 
 </head>
 
-<body class="auth-body" data-bs-theme="light">
+<body class="auth-body">
 
     <!-- Theme toggle -->
     <button class="btn btn-sm btn-outline-secondary auth-theme-toggle" type="button" data-theme-toggle
         aria-label="Switch color theme" title="Switch color theme">
         <i class="bi bi-moon-stars" data-theme-icon aria-hidden="true"></i>
     </button>
+
+    <main id="main-content" tabindex="-1">
 
     <div class="container">
 
@@ -64,6 +69,8 @@
         {% endblock %}
 
     </div>
+
+    </main>
 
     <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
 

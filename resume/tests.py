@@ -18,7 +18,12 @@ from django.test.utils import CaptureQueriesContext
 from django.urls import reverse
 
 from resume.models import Resume, ResumeAnalysis
-from resume.services import build_cache_key, context_from_payload, run_analysis_pipeline
+from resume.services import (
+    ResumeExtractionError,
+    build_cache_key,
+    context_from_payload,
+    run_analysis_pipeline,
+)
 from resume.text_extractor import parse_pdf
 
 
@@ -693,6 +698,11 @@ class AnalysisServiceTests(SimpleTestCase):
     def test_corrupt_pdf_raises(self):
         with self.assertRaises(Exception):
             parse_pdf(b"this is not a pdf")
+
+    def test_run_analysis_pipeline_rejects_textless_pdf(self):
+        """A scanned/textless PDF must fail loudly, never score 0 silently."""
+        with self.assertRaises(ResumeExtractionError):
+            run_analysis_pipeline(make_pdf(""), "")
 
     def test_build_cache_key_is_deterministic_and_input_sensitive(self):
         pdf = make_pdf()

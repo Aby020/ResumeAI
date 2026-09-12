@@ -31,6 +31,9 @@
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="{% static 'vendors/bootstrap-icons/bootstrap-icons.css' %}">
 
+    <!-- Theme bootstrap (prevents FOUC + fixes auth-page dark mode) -->
+    <script src="{% static 'js/theme-init.js' %}"></script>
+
     <!-- Main CSS -->
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 
@@ -40,6 +43,8 @@
 </head>
 
 <body>
+
+<a class="skip-link" href="#main-content">Skip to main content</a>
 
 <div class="admin-shell">
 
@@ -51,7 +56,7 @@
 
         {% include "components/navbar.html" %}
 
-        <main class="dashboard-content">
+        <main class="dashboard-content" id="main-content" tabindex="-1">
 
             <div class="container-fluid px-3 px-lg-4 py-4">
 

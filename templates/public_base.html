@@ -3,34 +3,33 @@
 <html lang="en">
 
 <head>
-
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>
-
         {% block title %}
         ResumeAI
         {% endblock %}
-
     </title>
-
     <meta name="description" content="ResumeAI - AI Powered Resume Analysis Platform">
 
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="{% static 'images/favicon/favicon.ico' %}">
 
-    <!-- Inter font -->
+    <!-- Fonts: Inter (UI/body) + Fraunces (editorial headlines) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;0,9..144,700;0,9..144,800;1,9..144,400;1,9..144,600;1,9..144,700;1,9..144,800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
-
     <link rel="stylesheet" href="{% static 'vendors/bootstrap-icons/bootstrap-icons.css' %}">
 
+    <!-- Theme bootstrap (prevents FOUC) -->
+    <script src="{% static 'js/theme-init.js' %}"></script>
+
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+    <!-- Landing page identity (public pages only) -->
+    <link rel="stylesheet" href="{% static 'css/landing.css' %}">
 
     {% block extra_css %}
     {% endblock %}
@@ -39,41 +38,79 @@
 
 <body>
 
-    {% block nav %}
-    <nav class="landing-nav">
-        <div class="container">
+    <a class="skip-link" href="#main-content">Skip to main content</a>
 
-            <a class="landing-brand" href="/" aria-label="ResumeAI home">
+    {% block nav %}
+    <nav class="landing-nav lp-nav">
+        <div class="lp-nav-inner">
+
+            <a class="landing-brand lp-brand" href="/" aria-label="ResumeAI home">
                 <span class="brand-icon"><i class="bi bi-file-earmark-person-fill" aria-hidden="true"></i></span>
-                <span>ResumeAI</span>
+                <span class="lp-brand-mark">ResumeAI</span>
             </a>
 
-            <div class="d-flex align-items-center gap-2">
+            <ul class="lp-nav-links">
+                <li><a href="#features">Features</a></li>
+                <li><a href="#how-it-works">How It Works</a></li>
+                <li><a href="#benefits">Benefits</a></li>
+                <li><a href="#cta">FAQ</a></li>
+            </ul>
+
+            <div class="lp-nav-actions">
+                <button class="lp-theme-toggle" type="button" data-theme-toggle aria-label="Toggle theme">
+                    <i class="bi bi-moon-stars-fill" data-theme-icon aria-hidden="true"></i>
+                </button>
 
                 {% if user.is_authenticated %}
-                <a href="{% url 'dashboard' %}" class="btn btn-primary btn-sm">Dashboard</a>
+                <a href="{% url 'dashboard' %}" class="btn lp-btn lp-btn-primary lp-btn-sm">Dashboard</a>
                 {% else %}
-                <a href="{% url 'login' %}" class="btn btn-outline-secondary btn-sm d-none d-sm-inline-flex">Sign In</a>
-                <a href="{% url 'register' %}" class="btn btn-primary btn-sm">
-                    <i class="bi bi-rocket-takeoff me-1" aria-hidden="true"></i>
+                <a href="{% url 'login' %}" class="btn lp-btn lp-btn-ghost lp-btn-sm d-none d-sm-inline-flex">Sign In</a>
+                <a href="{% url 'register' %}" class="btn lp-btn lp-btn-primary lp-btn-sm">
                     Get Started
+                    <i class="bi bi-arrow-right lp-btn-arrow" aria-hidden="true"></i>
                 </a>
                 {% endif %}
-
             </div>
 
         </div>
     </nav>
     {% endblock %}
 
-    {% block content %}
-    {% endblock %}
+    <main id="main-content" tabindex="-1">
+        {% block content %}
+        {% endblock %}
+    </main>
 
     {% block footer %}
-    <footer class="landing-footer">
-        <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center gap-2">
-            <span>© 2026 ResumeAI. All rights reserved.</span>
-            <span>AI Powered Resume Optimization Platform</span>
+    <footer class="landing-footer lp-footer">
+        <div class="lp-footer-inner">
+
+            <div class="lp-footer-brand">
+                <a class="lp-footer-logo" href="/" aria-label="ResumeAI home">
+                    <span class="brand-icon"><i class="bi bi-file-earmark-person-fill" aria-hidden="true"></i></span>
+                    <span class="lp-brand-mark">ResumeAI</span>
+                </a>
+                <p class="lp-footer-tagline">AI Powered Resume Optimization Platform</p>
+            </div>
+
+            <nav class="lp-footer-nav" aria-label="Footer navigation">
+                <a href="#features">Features</a>
+                <a href="#how-it-works">How It Works</a>
+                <a href="#cta">FAQ</a>
+                <a href="#">Privacy</a>
+                <a href="#">Terms</a>
+            </nav>
+
+            <div class="lp-footer-social">
+                <a href="https://github.com/Aby020/ResumeAI" rel="noopener" target="_blank" aria-label="ResumeAI on GitHub"><i class="bi bi-github"></i></a>
+                <a href="#" aria-label="ResumeAI on LinkedIn"><i class="bi bi-linkedin"></i></a>
+                <a href="#" aria-label="ResumeAI on Twitter"><i class="bi bi-twitter-x"></i></a>
+            </div>
+
+        </div>
+
+        <div class="lp-footer-bottom">
+            <span>&copy; 2026 ResumeAI. All rights reserved.</span>
         </div>
     </footer>
     {% endblock %}

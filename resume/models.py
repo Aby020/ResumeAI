@@ -4,6 +4,12 @@ from django.contrib.auth.models import User
 
 class Resume(models.Model):
 
+    # Upload guard: a resume PDF almost never exceeds a few MB. This caps
+    # request-body disk/memory usage on the server (DoS hardening) without
+    # affecting legitimate files. Shared by the API serializer and the
+    # server-rendered form.
+    MAX_UPLOAD_BYTES = 10 * 1024 * 1024
+
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
