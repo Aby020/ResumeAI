@@ -175,8 +175,14 @@ export function ProfilePage() {
   }
 
   async function handleSignOut(): Promise<void> {
+    // Leave protected territory before clearing the session (see WorkspaceNav:
+    // navigating while still authenticated guarantees the landing page wins
+    // over the ProtectedRoute /sign-in redirect on the user-state change).
+    // flushSync commits "/" before logout clears the session; a plain
+    // navigation is deferred in startTransition and the guard's /sign-in
+    // redirect can replace it first.
+    navigate('/', { replace: true, flushSync: true })
     await logout()
-    navigate('/')
   }
 
   const renderSection = (): ReactNode => {

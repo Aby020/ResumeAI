@@ -39,10 +39,27 @@
     </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!--
+      Fonts load asynchronously: a render-blocking stylesheet from Google Fonts
+      can stall first paint (and module-script execution) for seconds, leaving
+      the SPA a blank screen on refresh when the font CDN is slow. `media=print`
+      keeps the link non-blocking for the screen; `onload` swaps it to
+      `media="all"` the moment it's ready so the designed type still applies
+      (the `display=swap` in the URL already defers text painting to a system
+      fallback while loading, so there is no flash of the wrong font).
+    -->
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Syne:wght@400;500;600;700;800&display=swap"
       rel="stylesheet"
+      media="print"
+      onload="this.media='all'"
     />
+    <noscript>
+      <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Syne:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+      />
+    </noscript>
   </head>
   <body>
     <div id="root"></div>
