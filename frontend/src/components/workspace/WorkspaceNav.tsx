@@ -45,8 +45,14 @@ export function WorkspaceNav() {
   const displayName = user?.first_name?.trim() || user?.username || ''
 
   async function handleSignOut(): Promise<void> {
+    // Navigate to the public landing FIRST, then log out. Plain navigate() is
+    // wrapped in startTransition, so the "/" commit is deferred — logout's
+    // user-state flip would then re-render the still-mounted protected route
+    // with user null and let ProtectedRoute's /sign-in redirect replace the
+    // pending navigation. flushSync commits the landing before the session
+    // clears, so the guard never sees a signed-out user on a protected route.
+    navigate('/', { replace: true, flushSync: true })
     await logout()
-    navigate('/')
   }
 
   // Close the user menu on outside click or Escape.

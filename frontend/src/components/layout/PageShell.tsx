@@ -19,8 +19,13 @@ export function PageShell({ children }: PageShellProps) {
   const navigate = useNavigate()
 
   async function handleSignOut(): Promise<void> {
+    // Navigate to "/" first so the public landing is already in place when the
+    // session clears (same ordering as WorkspaceNav). flushSync commits the
+    // landing synchronously instead of deferring it in startTransition, so the
+    // ProtectedRoute /sign-in redirect cannot replace it when logout flips the
+    // user to null.
+    navigate('/', { replace: true, flushSync: true })
     await logout()
-    navigate('/')
   }
 
   return (
